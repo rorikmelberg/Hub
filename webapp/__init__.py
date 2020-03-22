@@ -47,6 +47,9 @@ def create_app(test_config=None):
     from . import smomo
     app.register_blueprint(smomo.bp)
 
+    from . import tilt
+    app.register_blueprint(tilt.bp)
+
     from . import db
     db.init_app(app)
     
