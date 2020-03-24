@@ -7,7 +7,7 @@
 <script src="/static/Chart.bundle.min.js"></script>
 <script src="/static/utils.js"></script>
 
-<span id='TiltBrewId' style='display: none;'>{{ tiltBrew.TileBrewId }}</span>
+<span id='TiltBrewId' style='display: none;'>{{ tiltBrew.TiltBrewId }}</span>
 
 <div class="container">
   <div class="row">
@@ -18,16 +18,11 @@
       Duration: <span id='Duration'></span><br />
     </div>
     <div class='col'>
-      Sensor 1: <span id='sensor1Current'></span>
+      Temp: <span id='currentTemp'>{{ tiltBrew.CurrentTemp }}</span>
     </div>
     <div class='col'>
-      Sensor 2: <span id='sensor2Current'></span>
-    </div>
-    <div class='col'>
-      Sensor 3: <span id='sensor3Current'></span><br/>
+      Gravity: <span id='currentGravity'>{{ tiltBrew.CurrentGravity }}</span>
       <input id='updateButton' type='button' onclick="getData(true);" value='Update'></input>
-      <input id='autoUpdate' type='checkbox' onclick="AutoUpdate();">Auto</input><br/>
-      <small class="text-muted">Last Update: <span id='LastUpdate'></span><br /></small>
     </div>
   </div>
 </div>
@@ -118,16 +113,11 @@
     { 
       console.log("Getting data");
 
-      var cookId = $("#CookId").text(); 
-      var url = $SCRIPT_ROOT + './getdata?cookId=' + cookId; 
+      var tiltBrewId = $("#TiltBrewId").text(); 
+      var url = $SCRIPT_ROOT + './getdata?tiltBrewId=' + tiltBrewId; 
       if(lastUpdate !=null) 
       {
         url = url.concat('&lastUpdate=',lastUpdate);
-      }
-
-      if(forceUpdate)
-      {
-        url = url.concat('&forceUpdate=True');
       }
 
       $.getJSON(url, {} , 
@@ -140,17 +130,15 @@
         var time = pad2.pad(today.getHours()) + ":" + pad2.pad(today.getMinutes()) + ":" + pad2.pad(today.getSeconds());
         var dateTime = date + ' ' + time;
 
-        updateChart(data['Temp1'], 0); 
-        updateChart(data['Temp2'], 1); 
-        updateChart(data['Temp3'], 2);
+        updateChart(data['Temp'], 0); 
+        updateChart(data['Gravity'], 1); 
         
-        myChart.data.datasets[3].data=data['smokerTarget']; 
-        myChart.data.datasets[4].data=data['target'];
+        myChart.data.datasets[3].data=data['tempTarget']; 
+        myChart.data.datasets[4].data=data['gravityTarget'];
         lastUpdate=data['lastUpdate']; 
         $("#Duration").text(data['duration']);
-        $("#sensor1Current").text(data['Sensor1Current']); 
-        $("#sensor2Current").text(data['Sensor2Current']);
-        $("#sensor3Current").text(data['Sensor3Current']);
+        $("#currentTemp").text(data['TempCurrent']); 
+        $("#currentGravity").text(data['GravityCurrent']);
         
         $("#LastUpdate").text(dateTime);
 

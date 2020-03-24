@@ -401,7 +401,7 @@ class TiltHydrometerManager:
     
     #Load Settings from config file, overriding values given at creation. This needs to be called before the start function is called.
     def loadSettings(self):
-        filename = "./tiltHydrometer/settings.ini"
+        filename = "tiltHydrometer/settings.ini"
         try:
             config = ConfigParser.ConfigParser()
             config.read(filename)

@@ -39,11 +39,11 @@ def GetTiltBrewData(tiltBrewId, date):
             endTime = currentTiltBrew.EndDate
         
         allData['duration'] = currentTiltBrew.Duration
-        allData['startDate'] = currentTiltBrew.Start.strftime(dateFormatString)
+        allData['startDate'] = currentTiltBrew.StartDate.strftime(dateFormatString)
         allData['currentDT'] = datetime.now()
         
         allData['tempTarget'] = GenerateTargetData(currentTiltBrew.StartDate, endTime, currentTiltBrew.TempTarget)
-        allData['GravityTarget'] = GenerateTargetData(currentTiltBrew.StartDate, endTime, currentTiltBrew.GravityTarget)
+        allData['gravityTarget'] = GenerateTargetData(currentTiltBrew.StartDate, endTime, currentTiltBrew.GravityTarget)
         currentDate = endTime
         allData['lastUpdate'] = currentDate.strftime(dateFormatString)
         
@@ -57,18 +57,18 @@ def GetTiltBrewData(tiltBrewId, date):
         temps1 = []
         gravities = []
         
-        # get current temps from the first item in the list
+        # get current datas from the first item in the list
         if len(datas) > 0:
-            currentData = temps[-1]  # last in the list
+            currentData = datas[-1]  # last in the list
             allData['TempCurrent'] = '{0:.2f}'.format(currentData.Temp)
-            allData['GravityCurrent'] = '{0:.2f}'.format(currentTemp.Gravity)
+            allData['GravityCurrent'] = '{0:.3f}'.format(currentData.Gravity)
             
         for x in datas:
             formattedDate = x.EventDate.strftime(dateFormatString)
             temp = {}
             temp['x'] = formattedDate
             temp['y'] = x.Temp
-            temps.append(temp)
+            temps1.append(temp)
 
             gravity = {}
             gravity['x'] = formattedDate

@@ -104,14 +104,15 @@ def deleteBrew():
     return redirect(url_for('selectCook'))
 
 @bp.route('/getdata', methods=['GET']) 
-def GetCookData():
+def GetTiltBrewData():
     date = request.args.get('lastUpdate')
     tiltBrewId = request.args.get('tiltBrewId')
 
     return TiltBrewBO.GetTiltBrewData(tiltBrewId, date)
 
 @bp.route('/setdata', methods=['POST']) 
-def SetCookData():
+def SetTiltBrewData():
+    print(request.json)
     datas = json.loads(request.json)
     tiltBrewId = TiltBrewDAL.getCurrentTiltBrewId()
     

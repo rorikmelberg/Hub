@@ -37,19 +37,22 @@ def getDataForTiltBrew(tiltBrewId, dateSince = None):
         data.EventDate = dh.convertTime(x[1])
         data.Temp = float('{0:.2f}'.format(x[2]))
         data.Gravity = float('{0:.4f}'.format(x[3]))
-        data.TiltBrewId = x[5]
+        data.TiltBrewId = x[4]
         
         datas.append(data)
 
     return datas
 
 def logTemps(temp, gravity, tiltBrewId):
-    # if DEBUG:
-    #    print("value: {0} {1} {2} {3}".format(temps[0], temps[1], temps[2], cookId))
-   
     db = wadb.get_db()
-    rtn = db.execute('INSERT INTO TiltData (EventDate, Temp, Gravity, TiltBrewId) VALUES(?, ?, ?, ?, ?)', (datetime.now(), temp, gravity, tiltBrewId, ))
-    db.commit()
+
+    rtn = db.execute('SELECT TiltDataId, Temp, Gravity FROM TiltData ORDER BY EventDate DESC LIMIT 1').fetchall()
+    if rtn[0][1] != temp or rtn[0][2] != gravity:
+        db.execute('INSERT INTO TiltData (EventDate, Temp, Gravity, TiltBrewId) VALUES(?, ?, ?, ?)', (datetime.now(), temp, gravity, tiltBrewId, ))
+        db.commit()
+    else:
+        db.execute('UPDATE TiltData SET EventDate = ? WHERE TiltDataId = ?', (datetime.now(), rtn[0][0], ))
+        db.commit()
 
 if __name__ == "__main__":
     getDataForTiltBrew(1)
