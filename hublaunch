@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script to load the application
-cd /home/pi/Projects/SmokerMonitor/
+cd /hub/
 
 export FLASK_APP=webapp
 export FLASK_ENV=development
