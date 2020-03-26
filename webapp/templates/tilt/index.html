@@ -38,7 +38,7 @@
       type: 'line',
       data: {
         datasets: [{
-          label: 'Sensor 1',
+          label: 'Temp',
           data: [],
           backgroundColor: window.chartColors.red,
           borderColor: window.chartColors.red,
@@ -47,7 +47,7 @@
           pointRadius: 0
         },
         {
-          label: 'Sensor 2',
+          label: 'Gravity',
           backgroundColor: window.chartColors.blue,
           borderColor: window.chartColors.blue,
           fill: false,
@@ -56,7 +56,7 @@
           pointRadius: 0
         },
         {
-          label: 'Sensor 3',
+          label: 'Temp Target',
           backgroundColor: window.chartColors.green,
           borderColor: window.chartColors.green,
           fill: false,
@@ -65,22 +65,10 @@
           pointRadius: 0
         },
         {
-          label: 'Smoker Target',
+          label: 'Gravity Trget',
           backgroundColor: window.chartColors.grey,
           borderColor: window.chartColors.orange,
           fill: false,
-          data: [{ x: '{{tiltBrew.StartDate}}', y: '{{tiltBrew.TempTarget}}' },
-          { x: '{{currentDT}}', y: '{{tiltBrew.GravityTarget}}' }],
-          borderWidth: 2,
-          pointRadius: 0
-        },
-        {
-          label: 'Target',
-          backgroundColor: window.chartColors.grey,
-          borderColor: window.chartColors.orange,
-          fill: false,
-          data: [{ x: '{{tiltBrew.StartDate}}', y: '{{tiltBrew.TempTarget}}' },
-          { x: '{{currentDT}}', y: '{{tiltBrew.GravityTarget}}' }],
           borderWidth: 2,
           pointRadius: 0
         },
@@ -133,8 +121,8 @@
         updateChart(data['Temp'], 0); 
         updateChart(data['Gravity'], 1); 
         
-        myChart.data.datasets[3].data=data['tempTarget']; 
-        myChart.data.datasets[4].data=data['gravityTarget'];
+        myChart.data.datasets[2].data=data['tempTarget']; 
+        myChart.data.datasets[3].data=data['gravityTarget'];
         lastUpdate=data['lastUpdate']; 
         $("#Duration").text(data['duration']);
         $("#currentTemp").text(data['TempCurrent']); 
