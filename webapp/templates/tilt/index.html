@@ -23,6 +23,8 @@
     <div class='col'>
       Gravity: <span id='currentGravity'>{{ tiltBrew.CurrentGravity }}</span>
       <input id='updateButton' type='button' onclick="getData(true);" value='Update'></input>
+      <input id='autoUpdate' type='checkbox' onclick="AutoUpdate();">Auto</input><br/>
+      <span id='LastDataStatus' class="rounded p-1" style="background-color: red;">Bad</span>
     </div>
   </div>
 </div>
@@ -129,7 +131,18 @@
         $("#currentGravity").text(data['GravityCurrent']);
         
         $("#LastUpdate").text(dateTime);
-
+        
+        if(data['LastDataStatus'] == true)
+        {
+          $("#LastDataStatus").css("background-color","green");
+          $("#LastDataStatus").text("Good");
+        }
+        else
+        {
+          $("#LastDataStatus").css("background-color","red");
+          $("#LastDataStatus").text("Bad");
+        }
+        
         // re-render the chart 
         myChart.update(); 
       }); 

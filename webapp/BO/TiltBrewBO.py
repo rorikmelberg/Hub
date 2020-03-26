@@ -62,6 +62,8 @@ def GetTiltBrewData(tiltBrewId, date):
             currentData = datas[-1]  # last in the list
             allData['TempCurrent'] = '{0:.2f}'.format(currentData.Temp)
             allData['GravityCurrent'] = '{0:.3f}'.format(currentData.Gravity)
+            allData['LastDataStatus'] = (currentDate - currentData.EventDate).total_seconds() < 120
+            allData['LastDataUpdate'] = currentData.EventDate.strftime(dateFormatString)
             
         for x in datas:
             formattedDate = x.EventDate.strftime(dateFormatString)
