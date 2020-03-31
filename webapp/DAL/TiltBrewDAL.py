@@ -35,11 +35,13 @@ def getCurrentTiltBrewId():
 def getTiltBrew(tiltBrewId):
     db = wadb.get_db()
     
-    rtn = db.execute('SELECT TiltBrewId, Title, StartDate, EndDate, TempTarget, GravityTarget FROM TiltBrews WHERE TiltBrewId = ?', (str(tiltBrewId), )).fetchone()
-    if rtn:
-        tiltBrew = objectifyTiltBrew(rtn)
+    tiltBrewRtn = db.execute('SELECT TiltBrewId, Title, StartDate, EndDate, TempTarget, GravityTarget FROM TiltBrews WHERE TiltBrewId = ?', (str(tiltBrewId), )).fetchone()
+    
+    if tiltBrewRtn:
+        tiltBrew = objectifyTiltBrew(tiltBrewRtn)
     else:
         tiltBrew = TiltBrew()
+        
     return tiltBrew
 
 def getTiltBrews():

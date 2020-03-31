@@ -31,17 +31,35 @@ def getDataForTiltBrew(tiltBrewId, dateSince = None):
 
     datas = []
 
-    for x in rtn:
-        data = TiltData()
-        data.TiltDataId = x[0]
-        data.EventDate = dh.convertTime(x[1])
-        data.Temp = float('{0:.2f}'.format(x[2]))
-        data.Gravity = float('{0:.4f}'.format(x[3]))
-        data.TiltBrewId = x[4]
-        
+    for row in rtn:
+        data = objectify(row)
         datas.append(data)
 
     return datas
+
+def getLastDataForTiltBrew(tiltBrewId):
+    db = wadb.get_db()
+
+    rtn = db.execute('SELECT TiltDataId, EventDate, Temp, Gravity, TiltBrewId '
+                        'FROM TiltData WHERE TiltBrewId = ? '
+                        'ORDER BY EventDate DESC '
+                        'LIMIT 1', (tiltBrewId,)).fetchone()
+    
+    if rtn:
+        tiltData = objectify(rtn)
+    else:
+        tiltData = TiltData()
+
+    return tiltData
+
+def objectify(row):
+    data = TiltData()
+    data.TiltDataId = int(row[0])
+    data.EventDate = dh.convertTime(row[1])
+    data.Temp = float('{0:.2f}'.format(row[2]))
+    data.Gravity = float('{0:.4f}'.format(row[3]))
+    data.TiltBrewId = row[4]
+    return data    
 
 def logTemps(temp, gravity, tiltBrewId):
     db = wadb.get_db()

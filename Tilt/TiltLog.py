@@ -25,7 +25,6 @@ print value.gravity
 valuesToSend = [value.temperature, value.gravity]
 
 valuesToSendText = json.dumps(valuesToSend)
-print(valuesToSendText)
 
 url = settings.get_url()
 res = requests.post('http://' + url + '/tilt/setdata', json=valuesToSendText)

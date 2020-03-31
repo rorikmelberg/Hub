@@ -46,7 +46,8 @@
           borderColor: window.chartColors.red,
           fill: false,
           borderWidth: 2,
-          pointRadius: 0
+          pointRadius: 0,
+          yAxisID: 'temp'
         },
         {
           label: 'Gravity',
@@ -55,7 +56,8 @@
           fill: false,
           data: [],
           borderWidth: 2,
-          pointRadius: 0
+          pointRadius: 0,
+          yAxisID: 'gravity'
         },
         {
           label: 'Temp Target',
@@ -64,7 +66,8 @@
           fill: false,
           data: [],
           borderWidth: 2,
-          pointRadius: 0
+          pointRadius: 0,
+          yAxisID: 'temp'
         },
         {
           label: 'Gravity Trget',
@@ -72,7 +75,8 @@
           borderColor: window.chartColors.orange,
           fill: false,
           borderWidth: 2,
-          pointRadius: 0
+          pointRadius: 0,
+          yAxisID: 'gravity'
         },
         ]
       },
@@ -81,6 +85,16 @@
           xAxes: [{
             type: 'time',
             time: { displayFormats: { quarter: 'h:mm a' } }
+          }],
+          yAxes: [{
+            id: 'temp',
+            type: 'linear',
+            position: 'left',
+          }, {
+            id: 'gravity',
+            type: 'linear',
+            position: 'right',
+            precision: 4
           }]
         }
       }
