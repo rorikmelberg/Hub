@@ -23,6 +23,8 @@
     <div class='col'>
       Gravity: <span id='currentGravity'>{{ tiltBrew.CurrentGravity }}</span>
       <input id='updateButton' type='button' onclick="getData(true);" value='Update'></input>
+      <input id='autoUpdate' type='checkbox' onclick="AutoUpdate();">Auto</input><br/>
+      <span id='LastDataStatus' class="rounded p-1" style="background-color: red;">Bad</span>
     </div>
   </div>
 </div>
@@ -38,51 +40,43 @@
       type: 'line',
       data: {
         datasets: [{
-          label: 'Sensor 1',
+          label: 'Temp',
           data: [],
           backgroundColor: window.chartColors.red,
           borderColor: window.chartColors.red,
           fill: false,
           borderWidth: 2,
-          pointRadius: 0
+          pointRadius: 0,
+          yAxisID: 'temp'
         },
         {
-          label: 'Sensor 2',
+          label: 'Gravity',
           backgroundColor: window.chartColors.blue,
           borderColor: window.chartColors.blue,
           fill: false,
           data: [],
           borderWidth: 2,
-          pointRadius: 0
+          pointRadius: 0,
+          yAxisID: 'gravity'
         },
         {
-          label: 'Sensor 3',
+          label: 'Temp Target',
           backgroundColor: window.chartColors.green,
           borderColor: window.chartColors.green,
           fill: false,
           data: [],
           borderWidth: 2,
-          pointRadius: 0
+          pointRadius: 0,
+          yAxisID: 'temp'
         },
         {
-          label: 'Smoker Target',
+          label: 'Gravity Trget',
           backgroundColor: window.chartColors.grey,
           borderColor: window.chartColors.orange,
           fill: false,
-          data: [{ x: '{{tiltBrew.StartDate}}', y: '{{tiltBrew.TempTarget}}' },
-          { x: '{{currentDT}}', y: '{{tiltBrew.GravityTarget}}' }],
           borderWidth: 2,
-          pointRadius: 0
-        },
-        {
-          label: 'Target',
-          backgroundColor: window.chartColors.grey,
-          borderColor: window.chartColors.orange,
-          fill: false,
-          data: [{ x: '{{tiltBrew.StartDate}}', y: '{{tiltBrew.TempTarget}}' },
-          { x: '{{currentDT}}', y: '{{tiltBrew.GravityTarget}}' }],
-          borderWidth: 2,
-          pointRadius: 0
+          pointRadius: 0,
+          yAxisID: 'gravity'
         },
         ]
       },
@@ -91,6 +85,16 @@
           xAxes: [{
             type: 'time',
             time: { displayFormats: { quarter: 'h:mm a' } }
+          }],
+          yAxes: [{
+            id: 'temp',
+            type: 'linear',
+            position: 'left',
+          }, {
+            id: 'gravity',
+            type: 'linear',
+            position: 'right',
+            precision: 4
           }]
         }
       }
@@ -133,15 +137,26 @@
         updateChart(data['Temp'], 0); 
         updateChart(data['Gravity'], 1); 
         
-        myChart.data.datasets[3].data=data['tempTarget']; 
-        myChart.data.datasets[4].data=data['gravityTarget'];
+        myChart.data.datasets[2].data=data['tempTarget']; 
+        myChart.data.datasets[3].data=data['gravityTarget'];
         lastUpdate=data['lastUpdate']; 
         $("#Duration").text(data['duration']);
         $("#currentTemp").text(data['TempCurrent']); 
         $("#currentGravity").text(data['GravityCurrent']);
         
         $("#LastUpdate").text(dateTime);
-
+        
+        if(data['LastDataStatus'] == true)
+        {
+          $("#LastDataStatus").css("background-color","green");
+          $("#LastDataStatus").text("Good");
+        }
+        else
+        {
+          $("#LastDataStatus").css("background-color","red");
+          $("#LastDataStatus").text("Bad");
+        }
+        
         // re-render the chart 
         myChart.update(); 
       }); 

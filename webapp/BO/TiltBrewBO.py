@@ -29,7 +29,9 @@ def GenerateTargetData(start, end, value):
 def GetTiltBrewData(tiltBrewId, date):
     
     currentTiltBrew = TiltBrewDAL.getTiltBrew(tiltBrewId)
-    
+    currentTiltData = TiltDataDAL.getLastDataForTiltBrew(tiltBrewId)
+    print(currentTiltData)
+
     if currentTiltBrew.TiltBrewId > 0:
         allData = {}
 
@@ -54,28 +56,29 @@ def GetTiltBrewData(tiltBrewId, date):
         else:
             datas = TiltDataDAL.getDataForTiltBrew(currentTiltBrew.TiltBrewId)
         
-        temps1 = []
+        temps = []
         gravities = []
         
         # get current datas from the first item in the list
-        if len(datas) > 0:
-            currentData = datas[-1]  # last in the list
-            allData['TempCurrent'] = '{0:.2f}'.format(currentData.Temp)
-            allData['GravityCurrent'] = '{0:.3f}'.format(currentData.Gravity)
+        if currentTiltData:
+            allData['TempCurrent'] = '{0:.2f}'.format(currentTiltData.Temp)
+            allData['GravityCurrent'] = '{0:.3f}'.format(currentTiltData.Gravity)
+            allData['LastDataStatus'] = (currentDate - currentTiltData.EventDate).total_seconds() < 120
+            allData['LastDataUpdate'] = currentTiltData.EventDate.strftime(dateFormatString)
             
         for x in datas:
             formattedDate = x.EventDate.strftime(dateFormatString)
             temp = {}
             temp['x'] = formattedDate
             temp['y'] = x.Temp
-            temps1.append(temp)
+            temps.append(temp)
 
             gravity = {}
             gravity['x'] = formattedDate
             gravity['y'] = x.Gravity
             gravities.append(gravity)
             
-        allData['Temp'] = temps1
+        allData['Temp'] = temps
         allData['Gravity'] = gravities
         
         return jsonify(allData)

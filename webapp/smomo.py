@@ -35,36 +35,7 @@ def index():
     
     currentCook = CookDL.getCook(cookId)
 
-    latestTime = datetime(2019,1,1)
-    latestTemp = [0, 0, 0]
-    minTemp = [9999, 9999, 9999]
-    maxTemp = [0, 0, 0]
-    temps = []
-
-    if currentCook.CookId > 0:
-        temps = TempDL.getTempsForCook(currentCook.CookId)
-
-        for x in temps:
-            if x.EventDate > latestTime:
-                latestTime = x.EventDate
-                latestTemp[0] = x.Temp1
-                latestTemp[1] = x.Temp2
-                latestTemp[2] = x.Temp3
-            """
-            if x.Temp < minTemp[x.SensorNum]:
-                minTemp[x.SensorNum] = x.Temp
-            
-            if x.Temp > maxTemp[x.SensorNum]:
-                maxTemp[x.SensorNum] = x.Temp
-            """
-            
     return render_template('smomo/index.html', cook = currentCook, 
-                                            latestTime = latestTime,
-                                            latestTemp = latestTemp,
-                                            minTemp = minTemp,
-                                            maxTemp = maxTemp,
-                                            temps = temps,
-                                            values = temps,
                                             currentDT=datetime.now())
 
 @bp.route('/editcook', methods=['GET', 'POST'])
@@ -82,7 +53,7 @@ def editcook():
         else:
             CookDL.endCurrentCook()    
         
-        return redirect(url_for('smomo.editcook'))
+        return redirect(url_for('smomo.index'))
 
     else:
         cook = CookDL.getCook(currentCookId)

@@ -30,35 +30,12 @@ def index():
     tiltBrewId = SMSession.getTiltBrewId()
     
     if tiltBrewId == 0:
-        tiltId = TiltBrewDAL.getCurrentTiltBrewId()
+        tiltBrewId = TiltBrewDAL.getCurrentTiltBrewId()
         SMSession.setTiltBrewId(tiltBrewId)
     
     currentTiltBrew = TiltBrewDAL.getTiltBrew(tiltBrewId)
 
-    latestTime = datetime(2019,1,1)
-    latestTemp = 0
-    minTemp = 9999
-    maxTemp = 0
-    latestGravity = 0
-    minGravity = 9999
-    maxGravity = 0
-    datas = []
-    
-    if currentTiltBrew.TiltBrewId > 0:
-        datas = TiltDataDAL.getDataForTiltBrew(currentTiltBrew.TiltBrewId)
-
-        for x in datas:
-            if x.EventDate > latestTime:
-                latestTime = x.EventDate
-                latestTemp = x.Temp
-                latestGravity = x.Gravity
-            
     return render_template('tilt/index.html', tiltBrew = currentTiltBrew, 
-                                            latestTime = latestTime,
-                                            latestTemp = latestTemp,
-                                            minTemp = minTemp,
-                                            maxTemp = maxTemp,
-                                            values = datas,
                                             currentDT=datetime.now())
 
 @bp.route('/editbrew', methods=['GET', 'POST'])
