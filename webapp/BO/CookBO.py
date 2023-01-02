@@ -9,11 +9,9 @@ import webapp.DAL.TempDL as TempDL
 import webapp.BO.CookBO as CookBO
 
 from datetime import datetime
-
 from flask import jsonify
 
 dateFormatString = '%Y-%m-%d %H:%M:%S.%f'
-
 
 def GenerateTargetData(start, end, value):
     series = []

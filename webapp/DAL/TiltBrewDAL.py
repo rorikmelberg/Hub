@@ -21,6 +21,7 @@ class TiltBrew:
         self.TempTarget = 0
         self.GravityTarget = 0
         self.Duration = ''
+        self.BrewRunning = False
 
 def getCurrentTiltBrewId():
     db = wadb.get_db()
@@ -78,9 +79,11 @@ def objectifyTiltBrew(tiltBrewList):
     if tiltBrew.EndDate:
         fromTime = tiltBrew.EndDate
         tiltBrew.EndFormatted = tiltBrew.EndDate.strftime(dateFormatter)
+        tiltBrew.BrewRunning = False
     else:
         fromTime = datetime.now()
         tiltBrew.EndFormatted = 'Running'
+        tiltBrew.BrewRunning = True
 
     calcDuration = (fromTime - tiltBrew.StartDate)
     tiltBrew.Duration = dh.printNiceTimeDelta(calcDuration)
