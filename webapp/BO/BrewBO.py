@@ -1,8 +1,8 @@
 import os
 import functools
 from webapp.db import get_db
-import webapp.DAL.TiltBrewDAL as TiltBrewDAL
-import webapp.DAL.TiltDataDAL as TiltDataDAL
+import webapp.DAL.BrewDAL as BrewDAL
+import webapp.DAL.SensorDataDAL as SensorDataDAL
 import webapp.BO.CookBO as CookBO
 
 from datetime import datetime
@@ -26,45 +26,45 @@ def GenerateTargetData(start, end, value):
 
     return series
 
-def GetTiltBrewData(tiltBrewId, date):
+def GetBrewData(brewId, date):
     
-    currentTiltBrew = TiltBrewDAL.getTiltBrew(tiltBrewId)
-    currentTiltData = TiltDataDAL.getLastDataForTiltBrew(tiltBrewId)
-    print(currentTiltData)
+    currentBrew = BrewDAL.getBrew(brewId)
+    currentSensorData = SensorDataDAL.getLastDataForBrew(brewId)
+    print(currentSensorData)
 
-    if currentTiltBrew.TiltBrewId > 0:
+    if currentBrew.BrewId > 0:
         allData = {}
 
         endTime = datetime.now()
 
-        if currentTiltBrew.EndDate:
-            endTime = currentTiltBrew.EndDate
+        if currentBrew.EndDate:
+            endTime = currentBrew.EndDate
         
-        allData['duration'] = currentTiltBrew.Duration
-        allData['startDate'] = currentTiltBrew.StartDate.strftime(dateFormatString)
+        allData['duration'] = currentBrew.Duration
+        allData['startDate'] = currentBrew.StartDate.strftime(dateFormatString)
         allData['currentDT'] = datetime.now()
         
-        allData['tempTarget'] = GenerateTargetData(currentTiltBrew.StartDate, endTime, currentTiltBrew.TempTarget)
-        allData['gravityTarget'] = GenerateTargetData(currentTiltBrew.StartDate, endTime, currentTiltBrew.GravityTarget)
+        allData['tempTarget'] = GenerateTargetData(currentBrew.StartDate, endTime, currentBrew.TempTarget)
+        allData['gravityTarget'] = GenerateTargetData(currentBrew.StartDate, endTime, currentBrew.GravityTarget)
         currentDate = endTime
         allData['lastUpdate'] = currentDate.strftime(dateFormatString)
         
         datas = []
         
         if date:
-            datas = TiltDataDAL.getDataForTiltBrew(currentTiltBrew.TiltBrewId, date)
+            datas = SensorDataDAL.getDataForBrew(currentBrew.BrewId, date)
         else:
-            datas = TiltDataDAL.getDataForTiltBrew(currentTiltBrew.TiltBrewId)
+            datas = SensorDataDAL.getDataForBrew(currentBrew.BrewId)
         
         temps = []
         gravities = []
         
         # get current datas from the first item in the list
-        if currentTiltData:
-            allData['TempCurrent'] = '{0:.2f}'.format(currentTiltData.Temp)
-            allData['GravityCurrent'] = '{0:.3f}'.format(currentTiltData.Gravity)
-            allData['LastDataStatus'] = (currentDate - currentTiltData.EventDate).total_seconds() < 120
-            allData['LastDataUpdate'] = currentTiltData.EventDate.strftime(dateFormatString)
+        if currentSensorData:
+            allData['TempCurrent'] = '{0:.2f}'.format(currentSensorData.Temp)
+            allData['GravityCurrent'] = '{0:.3f}'.format(currentSensorData.Gravity)
+            allData['LastDataStatus'] = (currentDate - currentSensorData.EventDate).total_seconds() < 120
+            allData['LastDataUpdate'] = currentSensorData.EventDate.strftime(dateFormatString)
             
         for x in datas:
             formattedDate = x.EventDate.strftime(dateFormatString)
@@ -85,4 +85,4 @@ def GetTiltBrewData(tiltBrewId, date):
 
     return jsonify('')
 
-# def ProcessSubscriptions(TiltBrewId)
+# def ProcessSubscriptions(BrewId)

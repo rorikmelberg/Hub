@@ -4,15 +4,15 @@
 {% endblock %}
 
 {% block content %}
-  {% if tiltBrew.BrewRunning %}
+  {% if brew.BrewRunning %}
   <form method="post" id='editcook' name='editBrew'>
     <div class="container">
       <div class="row">
         <div class='col'>
           <h2>End Brew</h2>
-          Title: {{ tiltBrew.Title }}<br />
-          Temp Target: {{ tiltBrew.TempTarget }}<br />
-          Gravity Target: {{ tiltBrew.GravityTarget }}<br />
+          Title: {{ brew.Title }}<br />
+          Temp Target: {{ brew.TempTarget }}<br />
+          Gravity Target: {{ brew.GravityTarget }}<br />
           <input type='submit' value='End Brew'>
         </div>
       </div>
@@ -24,9 +24,9 @@
       <div class="row">
         <div class='col'>
           <h2>Start Brew</h2>
-          Title: <input type='text' id='title' name='title' value='{{ tiltBrew.Title }}' /><br />
-          Temp Target: <input type='text' id='smokerTarget' name='tempTarget' value='{{ tiltBrew.TempTarget }}' /><br />
-          Gravity Target: <input type='text' id='target' name='gravityTarget' value='{{ tiltBrew.GravityTarget }}' /><br />
+          Title: <input type='text' id='title' name='title' value='{{ brew.Title }}' /><br />
+          Temp Target: <input type='text' id='smokerTarget' name='tempTarget' value='{{ brew.TempTarget }}' /><br />
+          Gravity Target: <input type='text' id='target' name='gravityTarget' value='{{ brew.GravityTarget }}' /><br />
           <input type='submit' value='Start Brew'>
         </div>
       </div>

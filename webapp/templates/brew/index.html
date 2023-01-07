@@ -7,21 +7,21 @@
 <script src="/static/Chart.bundle.min.js"></script>
 <script src="/static/utils.js"></script>
 
-<span id='TiltBrewId' style='display: none;'>{{ tiltBrew.TiltBrewId }}</span>
+<span id='BrewId' style='display: none;'>{{ brew.BrewId }}</span>
 
 <div class="container">
   <div class="row">
     <div class='col'>
-      Title: <span id='Title'> {{ tiltBrew.Title }}</span><br />
-      Start: {{ tiltBrew.StartFormatted }}<br />
-      End: {{ tiltBrew.EndFormatted }}<br />
+      Title: <span id='Title'> {{ brew.Title }}</span><br />
+      Start: {{ brew.StartFormatted }}<br />
+      End: {{ brew.EndFormatted }}<br />
       Duration: <span id='Duration'></span><br />
     </div>
     <div class='col'>
-      Temp: <span id='currentTemp'>{{ tiltBrew.CurrentTemp }}</span>
+      Temp: <span id='currentTemp'>{{ brew.CurrentTemp }}</span>
     </div>
     <div class='col'>
-      Gravity: <span id='currentGravity'>{{ tiltBrew.CurrentGravity }}</span>
+      Gravity: <span id='currentGravity'>{{ brew.CurrentGravity }}</span>
       <input id='updateButton' type='button' onclick="getData(true);" value='Update'></input>
       <input id='autoUpdate' type='checkbox' onclick="AutoUpdate();">Auto</input><br/>
       <span id='LastDataStatus' class="rounded p-1" style="background-color: red;">Bad</span>
@@ -117,8 +117,8 @@
     { 
       console.log("Getting data");
 
-      var tiltBrewId = $("#TiltBrewId").text(); 
-      var url = $SCRIPT_ROOT + './getdata?tiltBrewId=' + tiltBrewId; 
+      var brewId = $("#BrewId").text(); 
+      var url = $SCRIPT_ROOT + './getdata?brewId=' + brewId; 
       if(lastUpdate !=null) 
       {
         url = url.concat('&lastUpdate=',lastUpdate);
