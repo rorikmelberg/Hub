@@ -27,11 +27,8 @@ def GenerateTargetData(start, end, value):
     return series
 
 def GetBrewData(brewId, date):
-    
     currentBrew = BrewDAL.getBrew(brewId)
-    currentSensorData = SensorDataDAL.getLastDataForBrew(brewId)
-    print(currentSensorData)
-
+    
     if currentBrew.BrewId > 0:
         allData = {}
 
@@ -44,45 +41,63 @@ def GetBrewData(brewId, date):
         allData['startDate'] = currentBrew.StartDate.strftime(dateFormatString)
         allData['currentDT'] = datetime.now()
         
-        allData['tempTarget'] = GenerateTargetData(currentBrew.StartDate, endTime, currentBrew.TempTarget)
-        allData['gravityTarget'] = GenerateTargetData(currentBrew.StartDate, endTime, currentBrew.GravityTarget)
         currentDate = endTime
         allData['lastUpdate'] = currentDate.strftime(dateFormatString)
-        
-        datas = []
-        
-        if date:
-            datas = SensorDataDAL.getDataForBrew(currentBrew.BrewId, date)
-        else:
-            datas = SensorDataDAL.getDataForBrew(currentBrew.BrewId)
-        
-        temps = []
-        gravities = []
-        
-        # get current datas from the first item in the list
-        if currentSensorData:
-            allData['TempCurrent'] = '{0:.2f}'.format(currentSensorData.Temp)
-            allData['GravityCurrent'] = '{0:.3f}'.format(currentSensorData.Gravity)
-            allData['LastDataStatus'] = (currentDate - currentSensorData.EventDate).total_seconds() < 120
-            allData['LastDataUpdate'] = currentSensorData.EventDate.strftime(dateFormatString)
-            
-        for x in datas:
-            formattedDate = x.EventDate.strftime(dateFormatString)
-            temp = {}
-            temp['x'] = formattedDate
-            temp['y'] = x.Temp
-            temps.append(temp)
 
-            gravity = {}
-            gravity['x'] = formattedDate
-            gravity['y'] = x.Gravity
-            gravities.append(gravity)
-            
-        allData['Temp'] = temps
-        allData['Gravity'] = gravities
+        if date:
+            queryStartDate = date
+        else:
+            queryStartDate = currentBrew.StartDate
+
+        allData['Temp'] = GetTrendData(currentBrew.TempSensorId, queryStartDate, currentDate, False)
+        allData['tempTarget'] =  GetTrendData(currentBrew.TempTargetSensorId, queryStartDate, currentDate, True)
+    
+        allData['Gravity'] = GetTrendData(currentBrew.GravitySensorId, queryStartDate, currentDate, False)
+        allData['gravityTarget'] = GetTrendData(currentBrew.GravTargetSensorId, queryStartDate, currentDate, True)
+
+        if len(allData['Temp']) > 0:
+            allData['TempCurrent'] = '{0:.2f}'.format(allData['Temp'][-1]['y'])
+            lastDataUpdate = datetime.strptime(allData['Temp'][-1]['x'], dateFormatString)
+            allData['LastDataUpdate'] = lastDataUpdate.strftime(dateFormatString)
+            allData['LastDataStatus'] = (currentDate - lastDataUpdate).total_seconds() < 120
+        else:
+            allData['LastDataUpdate'] = 'None'
+            allData['LastDataStatus'] = False
+
+        if len(allData['Gravity']) > 0:
+            allData['GravityCurrent'] = '{0:.3f}'.format(allData['Gravity'][-1]['y'])
+                
         
+        
+        
+
+        if date:
+            queryStartDate = date
+        else:
+            queryStartDate = currentBrew.StartDate
+
+
         return jsonify(allData)
 
     return jsonify('')
 
-# def ProcessSubscriptions(BrewId)
+def GetTrendData(sensorId, startDate, endDate, isTarget):
+    data = SensorDataDAL.getValues(sensorId, startDate, endDate)
+    
+    print(len(data))
+    outputData = []
+    for x in data:
+        # formattedDate = x.EventDate.strftime(dateFormatString)
+        value = {}
+        value['x'] = x.EventDate
+        value['y'] = x.ValueFloat
+        outputData.append(value)
+
+    # to get targets to show, you have to add the end date
+    if isTarget:
+        value = {}
+        value['x'] = endDate
+        value['y'] = outputData[-1]['y']
+        outputData.append(value)
+        
+    return outputData

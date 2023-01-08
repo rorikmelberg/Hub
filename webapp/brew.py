@@ -84,7 +84,7 @@ def deleteBrew():
 def GetBrewData():
     date = request.args.get('lastUpdate')
     brewId = request.args.get('brewId')
-
+    print(brewId)
     return BrewBO.GetBrewData(brewId, date)
 
 # @bp.route('/setdata', methods=['POST']) 

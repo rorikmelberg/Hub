@@ -19,14 +19,17 @@ class SensorData:
         print('SensorData: SensorDataId: {0}, SensorId: {1}, ValueFloat: {2}, ValueChar: {3}, EventDate: {4}, '.format(self.SensorDataId, self.SensorDataId, self.ValueFloat, self.ValueChar, self.EventDate))
 
 
-def getValues(startDate, endDate):
+def getValues(sensorId, startDate, endDate):
+    print('{0} {1} {2}'.format(sensorId, startDate, endDate))
     db = wadb.get_db()
 
     sql = '''SELECT SensorDataId, SensorId, ValueFloat, ValueChar, EventDate
                         FROM SensorData
-                        WHERE EventDate between {0} and {1}'''.format(startDate, endDate)
+                        WHERE SensorId = ?
+                            AND EventDate >= ?
+                            AND EventDate < ?'''.format(startDate, endDate)
 
-    rtn = db.execute(sql).fetchall()
+    rtn = db.execute(sql, (sensorId, startDate, endDate)).fetchall()
 
     values = []
 

@@ -64,7 +64,19 @@ def getBrew(brewId):
 def getBrews():
     db = wadb.get_db()
 
-    rtn = db.execute('SELECT BrewId, Title, StartDate, EndDate, TempTarget, GravityTarget FROM Brews').fetchall()
+    sql = '''SELECT BrewId, 
+                Title, 
+                StartDate, 
+                EndDate, 
+                TempTarget, 
+                GravityTarget,
+                TempSensorId,
+                TempTargetSensorId,
+                GravitySensorId,
+                GravTargetSensorId
+            FROM Brews'''
+
+    rtn = db.execute(sql).fetchall()
     brews = []
     
     if rtn is not None:
@@ -89,6 +101,11 @@ def objectifyBrew(brewList):
     brew.EndDate = brewList[3]
     brew.TempTarget = brewList[4]
     brew.GravityTarget = brewList[5]
+    brew.TempSensorId = brewList[6]
+    brew.TempTargetSensorId = brewList[7]
+    brew.GravitySensorId = brewList[8]
+    brew.GravTargetSensorId = brewList[9]
+
     brew.StartFormatted = brew.StartDate.strftime(dateFormatter)
     
     if brew.EndDate:
