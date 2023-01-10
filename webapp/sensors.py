@@ -32,8 +32,10 @@ def index():
 @bp.route('/setdata', methods=['POST']) 
 def SetSensorData():
     data = request.json
+    
     sensorId = data['SensorId']
     value = data['Value']
+    
     # print('{0} - {1}'.format(sensorId, value))
     SensorDataDAL.setValue(sensorId, value)
 
