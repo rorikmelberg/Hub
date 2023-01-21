@@ -5,6 +5,7 @@ from flask import current_app, g
 from flask.cli import with_appcontext
 import webapp.DateHelpers as dh
 import webapp.db as wadb
+from . import SensorDataDAL
 
 from datetime import datetime
 
@@ -44,8 +45,6 @@ def getBrew(brewId):
                 Title, 
                 StartDate, 
                 EndDate, 
-                TempTarget, 
-                GravityTarget,
                 TempSensorId,
                 TempTargetSensorId,
                 GravitySensorId,
@@ -56,6 +55,11 @@ def getBrew(brewId):
     
     if brewRtn:
         brew = objectifyBrew(brewRtn)
+
+        # Lookup Temp and Grav 
+
+        brew.TempTarget = SensorDataDAL.getLast(brew.TempTargetSensorId).ValueFloat
+        brew.GravityTarget = SensorDataDAL.getLast(brew.GravitySensorId).ValueFloat
     else:
         brew = Brew()
         
@@ -68,8 +72,6 @@ def getBrews():
                 Title, 
                 StartDate, 
                 EndDate, 
-                TempTarget, 
-                GravityTarget,
                 TempSensorId,
                 TempTargetSensorId,
                 GravitySensorId,
@@ -99,12 +101,10 @@ def objectifyBrew(brewList):
     brew.Title = brewList[1]
     brew.StartDate = brewList[2]
     brew.EndDate = brewList[3]
-    brew.TempTarget = brewList[4]
-    brew.GravityTarget = brewList[5]
-    brew.TempSensorId = brewList[6]
-    brew.TempTargetSensorId = brewList[7]
-    brew.GravitySensorId = brewList[8]
-    brew.GravTargetSensorId = brewList[9]
+    brew.TempSensorId = brewList[4]
+    brew.TempTargetSensorId = brewList[5]
+    brew.GravitySensorId = brewList[6]
+    brew.GravTargetSensorId = brewList[7]
 
     brew.StartFormatted = brew.StartDate.strftime(dateFormatter)
     

@@ -4,7 +4,7 @@ def get_url():
     # return "localhost"
 
 def get_looptimeout():
-    return 30
+    return 60
 
 def get_debug():
     return True

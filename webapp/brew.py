@@ -8,6 +8,7 @@ import webapp.BO.BrewBO as BrewBO
 import webapp.SMSession as SMSession
 import simplejson as json
 
+from flask import current_app
 from flask import Blueprint
 from flask import flash
 from flask import g
@@ -40,6 +41,8 @@ def index():
 
 @bp.route('/editbrew', methods=['GET', 'POST'])
 def editbrew():
+    TEMP_SETPOINT_ID = 3
+    GRAVITY_SETPOINT_ID = 5
     currentBrewId = BrewDAL.getCurrentBrewId()
 
     if request.method == "POST":
@@ -49,6 +52,10 @@ def editbrew():
             gravityTarget =  request.form["gravityTarget"]
             
             BrewDAL.startBrew(title, tempTarget, gravityTarget)
+
+            DataDAL.setValue(TEMP_SETPOINT_ID, tempTarget)
+            DataDAL.setValue(GRAVITY_SETPOINT_ID, gravityTarget)
+
             brewId = BrewDAL.getCurrentBrewId()
             SMSession.setBrewId(brewId)
         else:
@@ -82,19 +89,12 @@ def deleteBrew():
 
 @bp.route('/getdata', methods=['GET']) 
 def GetBrewData():
-    date = request.args.get('lastUpdate')
-    brewId = request.args.get('brewId')
-    print(brewId)
-    return BrewBO.GetBrewData(brewId, date)
+    try:
 
-# @bp.route('/setdata', methods=['POST']) 
-# def SetBrewData():
-#     print(request.json)
-#     datas = json.loads(request.json)
-#     brewId = BrewDAL.getCurrentBrewId()
-#     
-#     if(brewId > 0):
-#         temp
-#         TiltDataDAL.logTemps(datas[0], datas[1], brewId)
-# 
-#     return jsonify({"Status":"OK"})
+        date = request.args.get('lastUpdate')
+        brewId = request.args.get('brewId')
+        current_app.logger.debug('GetBrewData: {} {}'.format(brewId, date))
+        return BrewBO.GetBrewData(brewId, date)
+    
+    except Exception as ex:
+        current_app.logger.exception(ex)

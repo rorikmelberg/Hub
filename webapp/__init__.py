@@ -2,6 +2,7 @@ import os
 import functools
 from webapp.db import get_db
 import webapp.SMSession as SMSession
+import logging
 
 from flask import Blueprint
 from flask import flash
@@ -18,6 +19,7 @@ from datetime import datetime
 dateFormatString = '%Y-%m-%d %H:%M:%S.%f'
 
 def create_app(test_config=None):
+
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
 
@@ -30,6 +32,17 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
+    if app.config['DEBUG']:
+        loglevel = logging.DEBUG
+    else:
+        loglevel = logging.INFO
+
+    logging.basicConfig(filename='webapp.log', level=loglevel)
+    
+    # Log Settings
+    logging.info('DEBUG: {}'.format(app.config['DEBUG']))
+    logging.info('SESSION_TYPE: {}'.format(app.config['SESSION_TYPE']))
+
     # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
@@ -39,6 +52,7 @@ def create_app(test_config=None):
     # app.config.from_object(__name__)
     Session(app)
 
+    # App Routes
     @app.route('/')
     @app.route('/index')
     def index():
@@ -53,8 +67,9 @@ def create_app(test_config=None):
     from . import sensors
     app.register_blueprint(sensors.bp)
 
-
     from . import db
     db.init_app(app)
     
+    app.logger.info("Init Executed")
+
     return app

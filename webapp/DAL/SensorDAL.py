@@ -4,8 +4,7 @@ import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 from datetime import datetime
-
-sys.path.append('C:\\Users\\rorik\\OneDrive\\Documents\\GitHub\\Hub')
+from flask import current_app
 
 import webapp.db as wadb
 import webapp.DateHelpers as dh
@@ -17,44 +16,80 @@ class Sensor:
         self.Type = ''
     
     def toString(self):
-        print('Sensor: SensorId: {0}, Name: {1}'.format(self.SensorId, self.Name))
+        print('Sensor: SensorId: {0}, Name: {1}, Type {2}'.format(self.SensorId, self.Name, self.Type))
+
+def getValue(sensorId):
+    try:
+        db = wadb.get_db()
+
+        sql = '''SELECT SensorId, Name, Type
+                    FROM Sensors
+                    WHERE SensorId = ?'''
+
+        x = db.execute(sql, (sensorId,)).fetchone()
+        
+        value = objectify(x)
+        return value
+
+    except Exception as ex:
+        current_app.logger.error(ex)
+        raise ex
+
 
 def getValues():
-    db = wadb.get_db()
+    try:
 
-    sql = '''SELECT SensorId, Name
-                        FROM Sensors'''
+        db = wadb.get_db()
 
-    rtn = db.execute(sql).fetchall()
+        sql = '''SELECT SensorId, Name, Type
+                            FROM Sensors'''
 
-    values = []
+        rtn = db.execute(sql).fetchall()
 
-    for x in rtn:
-        values.append(objectify(x))
-        
-    return values
+        values = []
 
-def setValue(sensorId, name):
-    db = wadb.get_db()
+        for x in rtn:
+            values.append(objectify(x))
+            
+        return values
 
-    sql = '''SELECT SensorId, Name 
-                FROM Sensors
-                WHERE SensorId = {0}'''.format(sensorId)
+    except Exception as ex:
+        current_app.logger.error(ex)
+        raise ex
 
-    rtn = db.execute(sql).fetch()
-    if(rtn):
-        rtn = db.execute('''UPDATE Sensors
-                                SET Name = {1},
-                            WHERE CurrentDataId = {0}'''.format(sensorId, name), ).fetchall()
-    else:
-        rtn = db.execute('''INSERT INTO Sensors (Name)
-                                values({0})'''.format(name), ).fetchall()
+def setValue(sensorId, name, type):
+    try:
+        db = wadb.get_db()
+        sensor = getValue(sensorId)
+
+        if(sensor):
+            sql = '''UPDATE Sensors
+                                    SET Name = ?,
+                                        Type = ?
+                                WHERE CurrentDataId = ?'''
+
+            rtn = db.execute(sql, (sensorId, name, type)).fetchall()
+        else:
+            sql = '''INSERT INTO Sensors (Name)
+                                    values(?)'''
+            rtn = db.execute(sql, (name, )).fetchall()
+    
+    except Exception as ex:
+        current_app.logger.error(ex)
+        current_app.logger.info(ex.Message)
+        raise ex
 
 def objectify(currentData):
-    out = Sensor()
-    out.SensorId = currentData[0]
-    out.Name = currentData[1]
-    return out
+    try:
+        out = Sensor()
+        out.SensorId = currentData[0]
+        out.Name = currentData[1]
+        out.Type = currentData[2]
+        return out
+    except Exception as ex:
+        current_app.logger.error(ex)
+        raise ex
+
 
 if __name__ == "__main__":
     rtn = getValues()

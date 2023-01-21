@@ -15,6 +15,7 @@
         <tr>
           <td></td>
           <td>Sensor Name</td>
+          <td>Type</td>
           <td></td>
         </tr>
         {% for sensor in sensors %}
@@ -22,6 +23,7 @@
             <tr>
                 <td><a href="./select?SensorId={{ sensor.SensorId }}">Select</a></td>
                 <td>{{ sensor.Name }}</td>
+                <td>{{ sensor.Type }}</td>
                 <td><a href="./delete?SensorId={{ sensor.SensorId }}">Delete</a></td>
               </tr>
         </tr>
