@@ -1,5 +1,5 @@
 def get_url():
-    return "hub.local:8080"
+    return "https://hub.local"
 
 def get_looptimeout():
     return 60

@@ -40,7 +40,7 @@ def GetBrewData(brewId, date):
             current_app.logger.debug(currentBrew.EndDate)
             
             if currentBrew.EndDate:
-                endTime = datetime.strptime(currentBrew.EndDate, dateFormatString)
+                endTime = currentBrew.EndDate
             else:
                 endTime = datetime.now()
 

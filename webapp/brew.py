@@ -85,7 +85,7 @@ def deleteBrew():
     
     brewId = request.args.get('brewId')
     BrewDAL.delete(brewId)
-    return redirect(url_for('selectCook'))
+    return redirect(url_for('brew.selectBrew'))
 
 @bp.route('/getdata', methods=['GET']) 
 def GetBrewData():

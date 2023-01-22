@@ -20,7 +20,7 @@ class SensorData:
         self.EventDate = ''
 
     def toString(self):
-        return 'SensorData: SensorDataId: {0}, SensorId: {1}, ValueFloat: {2}, ValueChar: {3}, EventDate: {4}, '.format(self.SensorDataId, self.SensorDataId, self.ValueFloat, self.ValueChar, self.EventDate)
+        return 'SensorData: SensorDataId: {0}, SensorId: {1}, ValueFloat: {2}, ValueChar: {3}, EventDate: {4}, '.format(self.SensorDataId, self.SensorId, self.ValueFloat, self.ValueChar, self.EventDate)
 
 def getLast(sensorId, endDate = None):
     try:

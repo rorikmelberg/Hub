@@ -16,7 +16,7 @@ class TiltData:
         self.BrewId = 0
     
     def toString(self):
-        print('TiltDataId: {0}, EventDate: {1}, Temp: {2}, Gravity: {3}, BrewId: {5}'.format(self.TiltDataId, self.EventDate, self.Temp, self.Gravity, self.TempBrewId))
+        return 'TiltDataId: {0}, EventDate: {1}, Temp: {2}, Gravity: {3}, BrewId: {5}'.format(self.TiltDataId, self.EventDate, self.Temp, self.Gravity, self.TempBrewId)
 
 def getDataForBrew(brewId, dateSince = None):
     db = wadb.get_db()
