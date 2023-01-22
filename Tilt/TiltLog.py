@@ -19,7 +19,7 @@ def SendSensorData(sensorId, value):
 	logging.info('Sensor: {0} Value: {1}'.format(sensorId, value))
 	
 	url = settings.get_url()
-	res = requests.post('http://' + url + '/sensors/setdata', json=valuesToSend)
+	res = requests.post(url + '/sensors/setdata', json=valuesToSend)
 
 while True:
 

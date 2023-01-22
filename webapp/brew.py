@@ -27,7 +27,7 @@ bp = Blueprint('brew', __name__, url_prefix='/brew')
 
 @bp.route('/')
 @bp.route('/chart')
-def index():
+def chart():
     brewId = SMSession.getBrewId()
     
     if brewId == 0:
@@ -85,7 +85,7 @@ def deleteBrew():
     
     brewId = request.args.get('brewId')
     BrewDAL.delete(brewId)
-    return redirect(url_for('selectCook'))
+    return redirect(url_for('brew.selectBrew'))
 
 @bp.route('/getdata', methods=['GET']) 
 def GetBrewData():

@@ -16,7 +16,7 @@ class Sensor:
         self.Type = ''
     
     def toString(self):
-        print('Sensor: SensorId: {0}, Name: {1}, Type {2}'.format(self.SensorId, self.Name, self.Type))
+        return 'Sensor: SensorId: {0}, Name: {1}, Type {2}'.format(self.SensorId, self.Name, self.Type)
 
 def getValue(sensorId):
     try:

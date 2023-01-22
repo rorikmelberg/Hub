@@ -17,7 +17,7 @@ class TempLog:
         self.CookId = 0
     
     def toString(self):
-        print('TemplogId: {0}, EventDate: {1}, Temp1: {2}, Temp2: {3}, Temp3: {4}, CookId: {5}'.format(self.TempLogId, self.EventDate, self.Temp1, self.Temp2, self.Temp3, self.CookId))
+        return 'TemplogId: {0}, EventDate: {1}, Temp1: {2}, Temp2: {3}, Temp3: {4}, CookId: {5}'.format(self.TempLogId, self.EventDate, self.Temp1, self.Temp2, self.Temp3, self.CookId)
 
 def getTempsForCook(cookId, dateSince = None):
     db = wadb.get_db()

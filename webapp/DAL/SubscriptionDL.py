@@ -14,7 +14,7 @@ class Subscription:
         self.Email = ''
     
     def toString(self):
-        print('SubscriptionId: {0}, CookId: {1}, Email: {2}'.format(self.TempLogId, self.EventDate, self.Temp1, self.Temp2, self.Temp3, self.CookId))
+        return 'SubscriptionId: {0}, CookId: {1}, Email: {2}'.format(self.TempLogId, self.EventDate, self.Temp1, self.Temp2, self.Temp3, self.CookId)
 
 def getSubscriptionsForCook(cookId):
     db = wadb.get_db()
