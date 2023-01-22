@@ -27,7 +27,7 @@ bp = Blueprint('brew', __name__, url_prefix='/brew')
 
 @bp.route('/')
 @bp.route('/chart')
-def index():
+def chart():
     brewId = SMSession.getBrewId()
     
     if brewId == 0:
