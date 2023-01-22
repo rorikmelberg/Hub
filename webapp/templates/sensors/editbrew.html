@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+  {% if brew.BrewRunning %}
+  <form method="post" id='editcook' name='editBrew'>
+    <div class="container">
+      <div class="row">
+        <div class='col'>
+          <h2>End Brew</h2>
+          Title: {{ brew.Title }}<br />
+          Temp Target: {{ brew.TempTarget }}<br />
+          Gravity Target: {{ brew.GravityTarget }}<br />
+          <input type='submit' value='End Brew'>
+        </div>
+      </div>
+    </div>
+  </form>
+  {% else %}
+  <form method="post" id='editcook' name='editBrew'>
+    <div class="container">
+      <div class="row">
+        <div class='col'>
+          <h2>Start Brew</h2>
+          Title: <input type='text' id='title' name='title' value='{{ brew.Title }}' /><br />
+          Temp Target: <input type='text' id='smokerTarget' name='tempTarget' value='{{ brew.TempTarget }}' /><br />
+          Gravity Target: <input type='text' id='target' name='gravityTarget' value='{{ brew.GravityTarget }}' /><br />
+          <input type='submit' value='Start Brew'>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  {% endif %}
+{% endblock %}

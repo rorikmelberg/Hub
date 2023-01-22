@@ -1,0 +1,23 @@
+Documentation:
+
+Automated setup:
+use:
+sudo crontab -e to edit settings
+
+@reboot cd /tilt/TiltLog && python TiltLog.py
+@reboot cd /tilt/TiltLog && python3 PT100Log.py
+
+Both Main scripts below set to start at reboot:
+
+Main Scripts:
+PT100Log.py - Logging data from the PT100 RTD Thermometer - Must be run with Python3
+TiltLog.py - Logging from the Tilt - must be run with Python2
+
+Settings.py - Settings for both scripts above.
+
+Utils:
+tiltHydrometer/ - directory holding tilt specific code - Python2
+blescan.py - Low Energy Blue Tooth utils
+
+Test Files:
+PT100text.py

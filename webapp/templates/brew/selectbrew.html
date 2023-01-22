@@ -17,15 +17,15 @@
           <td>End</td>
           <td>Duration</td>
         </tr>
-        {% for tiltBrew in tiltBrews %}
+        {% for brew in brews %}
         <tr>
             <tr>
-                <td><a href="./selectbrew?tiltBrewId={{ tiltBrew.TiltBrewId }}">Select</a></td>
-                <td>{{ tiltBrew.Title }}</td>
-                <td>{{ tiltBrew.StartFormatted }}</td>
-                <td>{{ tiltBrew.EndFormatted }}</td>
-                <td>{{ tiltBrew.Duration }}</td>
-                <td><a href="./deletebrew?tiltBrewId={{ tiltBrew.TiltBrewId }}">Delete</a></td>
+                <td><a href="./selectbrew?brewId={{ brew.BrewId }}">Select</a></td>
+                <td>{{ brew.Title }}</td>
+                <td>{{ brew.StartFormatted }}</td>
+                <td>{{ brew.EndFormatted }}</td>
+                <td>{{ brew.Duration }}</td>
+                <td><a href="./deletebrew?brewId={{ brew.BrewId }}">Delete</a></td>
               </tr>
         </tr>
       {% endfor %}

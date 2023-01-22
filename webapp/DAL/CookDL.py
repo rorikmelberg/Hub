@@ -21,6 +21,7 @@ class Cook:
         self.SmokerTarget = 0
         self.Target = 0
         self.Duration = ''
+        self.Running = False
 
 def getCurrentCookId():
     db = wadb.get_db()
@@ -79,9 +80,11 @@ def objectifyCook(cookList):
     if cook.End:
         fromTime = cook.End
         cook.EndFormatted = cook.End.strftime(dateFormatter)
+        cook.Running = False
     else:
         fromTime = datetime.now()
         cook.EndFormatted = 'Running'
+        cook.Running = True
 
     calcDuration = (fromTime - cook.Start)
     cook.Duration = dh.printNiceTimeDelta(calcDuration)

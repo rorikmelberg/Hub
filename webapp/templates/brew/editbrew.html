@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<script src="{{url_for('static', filename='js/sensors.js')}}"></script>
+<script>
+  function updateTemp()
+  {
+    var tempTarget = Number($("#tempTarget").val()); 
+    if (!isNaN(tempTarget)) 
+    {
+      updateSensorData(3, tempTarget);
+      window.location.href = "./chart";
+    }
+    else
+    {
+      window.alert('Please enter a number');
+    }
+  }
+
+  function updateGrav()
+  {
+    var gravTarget = Number($("#gravTarget").val()); 
+    if (!isNaN(gravTarget)) 
+    {
+      updateSensorData(5, gravTarget);
+      window.location.href = "./chart";
+    }
+    else
+    {
+      window.alert('Please enter a number');
+    }
+  }
+
+</script>
+{% endblock %}
+
+{% block content %}
+  {% if brew.BrewRunning %}
+  <form method="post" id='editcook' name='editBrew'>
+    <div class="container">
+      <div class="row">
+        <div class='col'>
+          <h2>End Brew</h2>
+          Title: {{ brew.Title }}<br />
+          Temp Target: {{ brew.TempTarget }} <input type='text' id='tempTarget' name='tempTarget'/><input type='button' value='Update' onclick='updateTemp()'/><br />
+          Gravity Target: {{ brew.GravityTarget }} <input type='text' id='gravTarget' name='gravTarget'/><input type='button' value='Update' onclick='updateGrav()'/><br />
+          <input type='submit' value='End Brew'>
+        </div>
+      </div>
+    </div>
+  </form>
+  {% else %}
+  <form method="post" id='editcook' name='editBrew'>
+    <div class="container">
+      <div class="row">
+        <div class='col'>
+          <h2>Start Brew</h2>
+          Title: <input type='text' id='title' name='title' value='{{ brew.Title }}' /><br />
+          Temp Target: <input type='text' id='smokerTarget' name='tempTarget' value='{{ brew.TempTarget }}' /><br />
+          Gravity Target: <input type='text' id='target' name='gravityTarget' value='{{ brew.GravityTarget }}' /><br />
+          <input type='submit' value='Start Brew'>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  {% endif %}
+{% endblock %}

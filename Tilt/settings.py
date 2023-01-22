@@ -1,9 +1,8 @@
 def get_url():
-    # return "hub.local:8080"
-    return "192.168.1.22"
+    return "hub.local:8080"
 
 def get_looptimeout():
-    return 30
+    return 60
 
 def get_debug():
     return True

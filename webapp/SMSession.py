@@ -7,9 +7,9 @@ def getCookId():
     cookId = session.get('CookId', 0)
     return cookId
 
-def setTiltBrewId(tiltBrewId):
-    session['TiltBrewId'] = tiltBrewId
+def setBrewId(BrewId):
+    session['BrewId'] = BrewId
 
-def getTiltBrewId():
-    tiltBrewId = session.get('TiltBrewId', 0)
-    return tiltBrewId
+def getBrewId():
+    brewId = session.get('BrewId', 0)
+    return brewId

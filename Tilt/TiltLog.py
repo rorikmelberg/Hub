@@ -8,6 +8,18 @@ import settings
 import logging
 
 logging.basicConfig(filename='TiltLog.log', level=logging.INFO, format='%(asctime)s %(levelname)s - %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+GRAVITYSENSORBLACK = 4
+TEMPSENSORBLACK = 6
+
+def SendSensorData(sensorId, value):
+	valuesToSend = {}
+	valuesToSend['SensorId'] = sensorId
+	valuesToSend['Value'] = value
+	
+	logging.info('Sensor: {0} Value: {1}'.format(sensorId, value))
+	
+	url = settings.get_url()
+	res = requests.post('http://' + url + '/sensors/setdata', json=valuesToSend)
 
 while True:
 
@@ -33,21 +45,12 @@ while True:
 			logging.debug('Temperature: %s', value.temperature)
 			logging.debug('Gravity: %s', value.gravity)
 
-			valuesToSend = [value.temperature, value.gravity]
+			SendSensorData(GRAVITYSENSORBLACK, value.gravity)
+			SendSensorData(TEMPSENSORBLACK, value.temperature)
 
-			valuesToSendText = json.dumps(valuesToSend)
-
-			url = settings.get_url()
-			res = requests.post('http://' + url + '/tilt/setdata', json=valuesToSendText)
-			
-			logging.debug(res.json())
-			
 	except Exception as inst:
 		logging.error(type(inst))
 		logging.error(inst.args)
 		logging.error(inst.args)
 		
 		tiltHydrometer.stop()
-	
-	logging.info('TiltLog End')
-	

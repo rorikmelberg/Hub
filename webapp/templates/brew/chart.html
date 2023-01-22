@@ -7,21 +7,21 @@
 <script src="/static/Chart.bundle.min.js"></script>
 <script src="/static/utils.js"></script>
 
-<span id='TiltBrewId' style='display: none;'>{{ tiltBrew.TiltBrewId }}</span>
+<span id='BrewId' style='display: none;'>{{ brew.BrewId }}</span>
 
 <div class="container">
   <div class="row">
     <div class='col'>
-      Title: <span id='Title'> {{ tiltBrew.Title }}</span><br />
-      Start: {{ tiltBrew.StartFormatted }}<br />
-      End: {{ tiltBrew.EndFormatted }}<br />
+      Title: <span id='Title'> {{ brew.Title }}</span><br />
+      Start: {{ brew.StartFormatted }}<br />
+      End: {{ brew.EndFormatted }}<br />
       Duration: <span id='Duration'></span><br />
     </div>
     <div class='col'>
-      Temp: <span id='currentTemp'>{{ tiltBrew.CurrentTemp }}</span>
+      Temp: <span id='currentTemp'>{{ brew.CurrentTemp }}</span>
     </div>
     <div class='col'>
-      Gravity: <span id='currentGravity'>{{ tiltBrew.CurrentGravity }}</span>
+      Gravity: <span id='currentGravity'>{{ brew.CurrentGravity }}</span>
       <input id='updateButton' type='button' onclick="getData(true);" value='Update'></input>
       <input id='autoUpdate' type='checkbox' onclick="AutoUpdate();">Auto</input><br/>
       <span id='LastDataStatus' class="rounded p-1" style="background-color: red;">Bad</span>
@@ -46,7 +46,17 @@
           borderColor: window.chartColors.red,
           fill: false,
           borderWidth: 2,
-          pointRadius: 0,
+          pointRadius: 2,
+          yAxisID: 'temp'
+        },
+        {
+          label: 'TiltTemp',
+          data: [],
+          backgroundColor: window.chartColors.darkgrey,
+          borderColor: window.chartColors.darkgrey,
+          fill: false,
+          borderWidth: 2,
+          pointRadius: 2,
           yAxisID: 'temp'
         },
         {
@@ -56,7 +66,7 @@
           fill: false,
           data: [],
           borderWidth: 2,
-          pointRadius: 0,
+          pointRadius: 2,
           yAxisID: 'gravity'
         },
         {
@@ -66,16 +76,16 @@
           fill: false,
           data: [],
           borderWidth: 2,
-          pointRadius: 0,
+          pointRadius: 2,
           yAxisID: 'temp'
         },
         {
-          label: 'Gravity Trget',
+          label: 'Gravity Target',
           backgroundColor: window.chartColors.grey,
           borderColor: window.chartColors.orange,
           fill: false,
           borderWidth: 2,
-          pointRadius: 0,
+          pointRadius: 2,
           yAxisID: 'gravity'
         },
         ]
@@ -117,8 +127,8 @@
     { 
       console.log("Getting data");
 
-      var tiltBrewId = $("#TiltBrewId").text(); 
-      var url = $SCRIPT_ROOT + './getdata?tiltBrewId=' + tiltBrewId; 
+      var brewId = $("#BrewId").text(); 
+      var url = $SCRIPT_ROOT + './getdata?brewId=' + brewId; 
       if(lastUpdate !=null) 
       {
         url = url.concat('&lastUpdate=',lastUpdate);
@@ -134,11 +144,12 @@
         var time = pad2.pad(today.getHours()) + ":" + pad2.pad(today.getMinutes()) + ":" + pad2.pad(today.getSeconds());
         var dateTime = date + ' ' + time;
 
-        updateChart(data['Temp'], 0); 
-        updateChart(data['Gravity'], 1); 
+        updateChart(data['Temp'], 0);
+        updateChart(data['TiltTemp'], 1)
+        updateChart(data['Gravity'], 2); 
         
-        myChart.data.datasets[2].data=data['tempTarget']; 
-        myChart.data.datasets[3].data=data['gravityTarget'];
+        myChart.data.datasets[3].data=data['tempTarget']; 
+        myChart.data.datasets[4].data=data['gravityTarget'];
         lastUpdate=data['lastUpdate']; 
         $("#Duration").text(data['duration']);
         $("#currentTemp").text(data['TempCurrent']); 
