@@ -57,11 +57,13 @@ def GetBrewData(brewId, date):
                 queryStartDate = currentBrew.StartDate
 
             allData['Temp'] = GetTrendData(currentBrew.TempSensorId, queryStartDate, endTime, False)
+            allData['TiltTemp'] = GetTrendData(currentBrew.TiltTempSensorId, queryStartDate, endTime, False)
             allData['tempTarget'] =  GetTrendData(currentBrew.TempTargetSensorId, currentBrew.StartDate, endTime, True)
         
             allData['Gravity'] = GetTrendData(currentBrew.GravitySensorId, queryStartDate, endTime, False)
             allData['gravityTarget'] = GetTrendData(currentBrew.GravTargetSensorId, currentBrew.StartDate, endTime, True)
 
+            
             if len(allData['Temp']) > 0:
                 allData['TempCurrent'] = '{0:.2f}'.format(allData['Temp'][-1]['y'])
                 lastDataUpdate = datetime.strptime(allData['Temp'][-1]['x'], dateFormatString)

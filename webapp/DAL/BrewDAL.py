@@ -21,6 +21,7 @@ class Brew:
         self.TempTargetSensorId = 0
         self.GravitySensorId = 0
         self.GravTargetSensorId = 0
+        self.TiltTempSensorId = 0
         self.StartFormatted = ''
         self.EndFormatted = ''
         self.TempTarget = 0
@@ -48,7 +49,8 @@ def getBrew(brewId):
                 TempSensorId,
                 TempTargetSensorId,
                 GravitySensorId,
-                GravTargetSensorId
+                GravTargetSensorId,
+                TiltTempSensorId
             FROM Brews WHERE BrewId = ?'''
 
     brewRtn = db.execute(sql, (str(brewId), )).fetchone()
@@ -59,7 +61,7 @@ def getBrew(brewId):
         # Lookup Temp and Grav 
 
         brew.TempTarget = SensorDataDAL.getLast(brew.TempTargetSensorId).ValueFloat
-        brew.GravityTarget = SensorDataDAL.getLast(brew.GravitySensorId).ValueFloat
+        brew.GravityTarget = SensorDataDAL.getLast(brew.GravTargetSensorId).ValueFloat
     else:
         brew = Brew()
         
@@ -75,7 +77,8 @@ def getBrews():
                 TempSensorId,
                 TempTargetSensorId,
                 GravitySensorId,
-                GravTargetSensorId
+                GravTargetSensorId,
+                TiltTempSensorId
             FROM Brews'''
 
     rtn = db.execute(sql).fetchall()
@@ -105,6 +108,7 @@ def objectifyBrew(brewList):
     brew.TempTargetSensorId = brewList[5]
     brew.GravitySensorId = brewList[6]
     brew.GravTargetSensorId = brewList[7]
+    brew.TiltTempSensorId = brewList[8]
 
     brew.StartFormatted = brew.StartDate.strftime(dateFormatter)
     
@@ -131,8 +135,9 @@ def startBrew(title, tempTarget, gravityTarget):
                             TempSensorId,
                             TempTargetSensorId,
                             GravitySensorId,
-                            GravTargetSensorId) 
-                            VALUES(?,?,?,?,2,3,4,5)'''
+                            GravTargetSensorId,
+                            TiltTempSensorId) 
+                            VALUES(?,?,?,?,2,3,4,5,6)'''
 
     db.execute(sql, (title, datetime.now(), tempTarget, gravityTarget,))
     db.commit()

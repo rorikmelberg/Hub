@@ -46,7 +46,17 @@
           borderColor: window.chartColors.red,
           fill: false,
           borderWidth: 2,
-          pointRadius: 0,
+          pointRadius: 2,
+          yAxisID: 'temp'
+        },
+        {
+          label: 'TiltTemp',
+          data: [],
+          backgroundColor: window.chartColors.darkgrey,
+          borderColor: window.chartColors.darkgrey,
+          fill: false,
+          borderWidth: 2,
+          pointRadius: 2,
           yAxisID: 'temp'
         },
         {
@@ -56,7 +66,7 @@
           fill: false,
           data: [],
           borderWidth: 2,
-          pointRadius: 0,
+          pointRadius: 2,
           yAxisID: 'gravity'
         },
         {
@@ -66,7 +76,7 @@
           fill: false,
           data: [],
           borderWidth: 2,
-          pointRadius: 0,
+          pointRadius: 2,
           yAxisID: 'temp'
         },
         {
@@ -75,7 +85,7 @@
           borderColor: window.chartColors.orange,
           fill: false,
           borderWidth: 2,
-          pointRadius: 0,
+          pointRadius: 2,
           yAxisID: 'gravity'
         },
         ]
@@ -134,11 +144,12 @@
         var time = pad2.pad(today.getHours()) + ":" + pad2.pad(today.getMinutes()) + ":" + pad2.pad(today.getSeconds());
         var dateTime = date + ' ' + time;
 
-        updateChart(data['Temp'], 0); 
-        updateChart(data['Gravity'], 1); 
+        updateChart(data['Temp'], 0);
+        updateChart(data['TiltTemp'], 1)
+        updateChart(data['Gravity'], 2); 
         
-        myChart.data.datasets[2].data=data['tempTarget']; 
-        myChart.data.datasets[3].data=data['gravityTarget'];
+        myChart.data.datasets[3].data=data['tempTarget']; 
+        myChart.data.datasets[4].data=data['gravityTarget'];
         lastUpdate=data['lastUpdate']; 
         $("#Duration").text(data['duration']);
         $("#currentTemp").text(data['TempCurrent']); 

@@ -34,7 +34,7 @@ if __name__ == "__main__":
 			
 			debug = settings.get_debug()
 			tempVals = PT100Funcs.readTemp(tempSensor)
-			SendSensorData(2, round(tempVals['tempF'], 2))
+			SendSensorData(2, round(tempVals['tempF'], 1))
 			time.sleep(settings.get_looptimeout())
 
 		except Exception as inst:

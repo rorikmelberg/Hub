@@ -9,6 +9,8 @@ from . import SensorDAL
 import webapp.db as wadb
 import webapp.DateHelpers as dh
 
+dateFormatString = '%Y-%m-%d %H:%M:%S.%f'
+
 class SensorData:
     def __init__(self):
         self.SensorDataId = 0
@@ -18,11 +20,16 @@ class SensorData:
         self.EventDate = ''
 
     def toString(self):
-        print('SensorData: SensorDataId: {0}, SensorId: {1}, ValueFloat: {2}, ValueChar: {3}, EventDate: {4}, '.format(self.SensorDataId, self.SensorDataId, self.ValueFloat, self.ValueChar, self.EventDate))
+        return 'SensorData: SensorDataId: {0}, SensorId: {1}, ValueFloat: {2}, ValueChar: {3}, EventDate: {4}, '.format(self.SensorDataId, self.SensorDataId, self.ValueFloat, self.ValueChar, self.EventDate)
 
-def getLast(sensorId):
+def getLast(sensorId, endDate = None):
     try:
+        if endDate is None:
+            endDate = datetime.datetime.now()
+
         db = wadb.get_db()
+        
+        current_app.logger.debug('Get Last: {}'.format(sensorId, endDate))
 
         sql = '''SELECT SensorDataId, SensorId, ValueFloat, ValueChar, EventDate
                             FROM SensorData
@@ -31,9 +38,12 @@ def getLast(sensorId):
                             LIMIT 1'''
         
         rtn = db.execute(sql, (sensorId,)).fetchone()
-
-        value = objectify(rtn)
-        return value
+        
+        if rtn != None:
+            value = objectify(rtn)
+            return value
+        else:
+            return SensorData()
     
     except Exception as ex:
         current_app.logger.error(ex)
@@ -41,9 +51,14 @@ def getLast(sensorId):
 
 def getValues(sensorId, startDate, endDate):
     try:
-        current_app.logger.debug('{0} {1} {2}'.format(sensorId, startDate, endDate))
+        current_app.logger.debug('GetValues: {0} {1} {2}'.format(sensorId, startDate, endDate))
         
         db = wadb.get_db()
+        values = []
+        firstVal = getLast(sensorId, startDate)
+        current_app.logger.debug(firstVal.toString())
+        firstVal.EventDate = startDate.strftime(dateFormatString)
+        values.append(firstVal)
 
         sql = '''SELECT SensorDataId, SensorId, ValueFloat, ValueChar, EventDate
                             FROM SensorData
@@ -53,8 +68,6 @@ def getValues(sensorId, startDate, endDate):
                             ORDER BY EventDate'''
         
         rtn = db.execute(sql, (sensorId, startDate, endDate)).fetchall()
-
-        values = []
 
         for x in rtn:
             values.append(objectify(x))
@@ -68,7 +81,7 @@ def getValues(sensorId, startDate, endDate):
 def setValue(sensorId, value):
     db = wadb.get_db()
     currentTime = datetime.datetime.now()
-    
+
     try:
         sensor = SensorDAL.getValue(sensorId)
         

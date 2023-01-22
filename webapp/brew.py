@@ -26,7 +26,7 @@ dateFormatString = '%Y-%m-%d %H:%M:%S.%f'
 bp = Blueprint('brew', __name__, url_prefix='/brew')
 
 @bp.route('/')
-@bp.route('/index')
+@bp.route('/chart')
 def index():
     brewId = SMSession.getBrewId()
     
@@ -36,7 +36,7 @@ def index():
     
     currentBrew = BrewDAL.getBrew(brewId)
 
-    return render_template('brew/index.html', brew = currentBrew, 
+    return render_template('brew/chart.html', brew = currentBrew, 
                                             currentDT=datetime.now())
 
 @bp.route('/editbrew', methods=['GET', 'POST'])
@@ -61,7 +61,7 @@ def editbrew():
         else:
             BrewDAL.endCurrentBrew()    
         
-        return redirect(url_for('brew.index'))
+        return redirect(url_for('brew.chart'))
 
     else:
         brew = BrewDAL.getBrew(currentBrewId)
@@ -74,7 +74,7 @@ def selectBrew():
 
     if brewId:
         SMSession.setBrewId(brewId)
-        return redirect(url_for('brew.index'))
+        return redirect(url_for('brew.chart'))
 
     else:
         brews = BrewDAL.getBrews()
