@@ -7,7 +7,13 @@ import json
 import settings
 import logging
 
-logging.basicConfig(filename='TiltLog.log', level=logging.INFO, format='%(asctime)s %(levelname)s - %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+logging.basicConfig(filename='TiltLog.log', level=logging.DEBUG, format='%(asctime)s %(levelname)s - %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+console = logging.StreamHandler()
+console.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
+console.setFormatter(formatter)
+logging.getLogger().addHandler(console)
+
 GRAVITYSENSORBLACK = 4
 TEMPSENSORBLACK = 6
 
@@ -32,25 +38,23 @@ while True:
 		tiltHydrometer = TiltHydrometer.TiltHydrometerManager(True, 60, 40)
 		tiltHydrometer.loadSettings()
 		tiltHydrometer.start()
-
+		
 		debug = settings.get_debug()
 
-		while True:
-			time.sleep(settings.get_looptimeout())
-			
-			valuesToSend = []
+		valuesToSend = []
 
-			value = tiltHydrometer.getValue('Black')
+		value = tiltHydrometer.getValue('Black')
+		
+		logging.debug('Temperature: %s', value.temperature)
+		logging.debug('Gravity: %s', value.gravity)
 
-			logging.debug('Temperature: %s', value.temperature)
-			logging.debug('Gravity: %s', value.gravity)
-
-			SendSensorData(GRAVITYSENSORBLACK, value.gravity)
-			SendSensorData(TEMPSENSORBLACK, value.temperature)
+		SendSensorData(GRAVITYSENSORBLACK, value.gravity)
+		SendSensorData(TEMPSENSORBLACK, value.temperature)
 
 	except Exception as inst:
 		logging.error(type(inst))
 		logging.error(inst.args)
 		logging.error(inst.args)
-		
-		tiltHydrometer.stop()
+	
+	# Sleep
+	time.sleep(settings.get_looptimeout())
