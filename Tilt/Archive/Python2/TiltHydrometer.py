@@ -337,6 +337,7 @@ class TiltHydrometerManager:
             tiltHydrometer = TiltHydrometer(colour, self.averagingPeriod, self.medianWindow, self.debug)
             self.tiltHydrometers[colour] = tiltHydrometer
             
+        
         tiltHydrometer.setValues(temperature, gravity)
         
     #Retrieve function.
@@ -352,7 +353,7 @@ class TiltHydrometerManager:
         try:
             sock = bluez.hci_open_dev(self.dev_id)
 
-        except Exception as e:
+        except Exception, e:
             print "ERROR: Accessing bluetooth device: " + e.message
             sys.exit(1)
 
@@ -400,7 +401,7 @@ class TiltHydrometerManager:
     
     #Load Settings from config file, overriding values given at creation. This needs to be called before the start function is called.
     def loadSettings(self):
-        filename = "./tiltHydrometer/settings.ini"
+        filename = "tiltHydrometer/settings.ini"
         try:
             config = ConfigParser.ConfigParser()
             config.read(filename)

@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<script src="/static/Chart.bundle.min.js"></script>
+<script src="/static/utils.js"></script>
+
+<span id='BrewId' style='display: none;'>{{ brew.BrewId }}</span>
+
+<div class="container">
+  <div class="row">
+    <div class='col'>
+      Title: <span id='Title'> {{ brew.Title }}</span><br />
+      Start: {{ brew.StartFormatted }}<br />
+      End: {{ brew.EndFormatted }}<br />
+      Duration: <span id='Duration'></span><br />
+    </div>
+    <div class='col'>
+      Temp: <span id='currentTemp'>{{ brew.CurrentTemp }}</span>
+    </div>
+    <div class='col'>
+      Gravity: <span id='currentGravity'>{{ brew.CurrentGravity }}</span>
+      <input id='updateButton' type='button' onclick="getData(true);" value='Update'></input>
+      <input id='autoUpdate' type='checkbox' onclick="AutoUpdate();">Auto</input><br/>
+      <span id='LastDataStatus' class="rounded p-1" style="background-color: red;">Bad</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <canvas id="chart"></canvas>
+</div>
+
+<script>
+  var ctx = document.getElementById('chart').getContext('2d');
+  var myChart = new Chart(ctx,
+    {
+      type: 'line',
+      data: {
+        datasets: [{
+          label: 'Temp',
+          data: [],
+          backgroundColor: window.chartColors.red,
+          borderColor: window.chartColors.red,
+          fill: false,
+          borderWidth: 2,
+          pointRadius: 2,
+          yAxisID: 'temp'
+        },
+        {
+          label: 'TiltTemp',
+          data: [],
+          backgroundColor: window.chartColors.darkgrey,
+          borderColor: window.chartColors.darkgrey,
+          fill: false,
+          borderWidth: 2,
+          pointRadius: 2,
+          yAxisID: 'temp'
+        },
+        {
+          label: 'Gravity',
+          backgroundColor: window.chartColors.blue,
+          borderColor: window.chartColors.blue,
+          fill: false,
+          data: [],
+          borderWidth: 2,
+          pointRadius: 2,
+          yAxisID: 'gravity'
+        },
+        {
+          label: 'Temp Target',
+          backgroundColor: window.chartColors.green,
+          borderColor: window.chartColors.green,
+          fill: false,
+          data: [],
+          borderWidth: 2,
+          pointRadius: 2,
+          yAxisID: 'temp'
+        },
+        {
+          label: 'Gravity Target',
+          backgroundColor: window.chartColors.grey,
+          borderColor: window.chartColors.orange,
+          fill: false,
+          borderWidth: 2,
+          pointRadius: 2,
+          yAxisID: 'gravity'
+        },
+        ]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+            type: 'time',
+            time: { displayFormats: { quarter: 'h:mm a' } }
+          }],
+          yAxes: [{
+            id: 'temp',
+            type: 'linear',
+            position: 'left',
+          }, {
+            id: 'gravity',
+            type: 'linear',
+            position: 'right',
+            precision: 4
+          }]
+        }
+      }
+    });
+
+</script>
+
+<script type=text/javascript> 
+  $SCRIPT_ROOT={{ request.script_root|tojson|safe }}; 
+  var lastUpdate = null;
+  var interval = 0;  //Use to store and clear the set interval
+
+
+  $(document).ready(function() 
+    { 
+      getData(false); 
+    });
+
+  function getData(forceUpdate) 
+    { 
+      console.log("Getting data");
+
+      var brewId = $("#BrewId").text(); 
+      var url = $SCRIPT_ROOT + './getdata?brewId=' + brewId; 
+      if(lastUpdate !=null) 
+      {
+        url = url.concat('&lastUpdate=',lastUpdate);
+      }
+
+      $.getJSON(url, {} , 
+      function(data) 
+      {
+        var pad2 = new Padder(2);
+
+        var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var time = pad2.pad(today.getHours()) + ":" + pad2.pad(today.getMinutes()) + ":" + pad2.pad(today.getSeconds());
+        var dateTime = date + ' ' + time;
+
+        updateChart(data['Temp'], 0);
+        updateChart(data['TiltTemp'], 1)
+        updateChart(data['Gravity'], 2); 
+        
+        myChart.data.datasets[3].data=data['tempTarget']; 
+        myChart.data.datasets[4].data=data['gravityTarget'];
+        lastUpdate=data['lastUpdate']; 
+        $("#Duration").text(data['duration']);
+        $("#currentTemp").text(data['TempCurrent']); 
+        $("#currentGravity").text(data['GravityCurrent']);
+        
+        $("#LastUpdate").text(dateTime);
+        
+        if(data['LastDataStatus'] == true)
+        {
+          $("#LastDataStatus").css("background-color","green");
+          $("#LastDataStatus").text("Good");
+        }
+        else
+        {
+          $("#LastDataStatus").css("background-color","red");
+          $("#LastDataStatus").text("Bad");
+        }
+        
+        // re-render the chart 
+        myChart.update(); 
+      }); 
+      return false; 
+    }
+
+    function updateChart(newData, offset) 
+    { 
+      if(newData.length> 0)
+      {
+        if(myChart.data.datasets[offset].data.length == 0)
+        {
+          myChart.data.datasets[offset].data = newData;  
+        }
+        else
+        {
+          var completeData = myChart.data.datasets[offset].data.concat(newData);
+          
+          myChart.data.datasets[offset].data = completeData;
+        }
+      }
+    }
+  
+    function AutoUpdate()
+    {
+      if($("#autoUpdate").is(':checked'))
+      {
+        // Get a refresh now
+        getData(false);
+
+        // Schedule Refresh
+        interval = setInterval(getData,10000); 
+      }
+      else
+      {
+        clearInterval(interval);
+      }
+    }
+</script>
+
+{% endblock %}
