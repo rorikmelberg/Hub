@@ -27,17 +27,17 @@ def SendSensorData(sensorId, value):
 	url = settings.get_url()
 	res = requests.post(url + '/sensors/setdata', json=valuesToSend)
 
+logging.info('TiltLog Start')
+logging.info('URL: %s', settings.get_url())
+logging.info('Loop Timeout: %s', settings.get_looptimeout())
+logging.info('Debug: %s', settings.get_debug())
+
+tiltHydrometer = TiltHydrometer.TiltHydrometerManager(True, 60, 40)
+tiltHydrometer.loadSettings()
+tiltHydrometer.start()
+
 while True:
-
-	logging.info('TiltLog Start')
-	logging.info('URL: %s', settings.get_url())
-	logging.info('Loop Timeout: %s', settings.get_looptimeout())
-	logging.info('Debug: %s', settings.get_debug())
-
 	try:
-		tiltHydrometer = TiltHydrometer.TiltHydrometerManager(True, 60, 40)
-		tiltHydrometer.loadSettings()
-		tiltHydrometer.start()
 		
 		debug = settings.get_debug()
 
@@ -55,6 +55,8 @@ while True:
 		logging.error(type(inst))
 		logging.error(inst.args)
 		logging.error(inst.args)
-	
+
 	# Sleep
 	time.sleep(settings.get_looptimeout())
+
+logging.info('Exiting')
