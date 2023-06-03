@@ -30,6 +30,33 @@ def index():
     return render_template('sensors/index.html', sensors = sensors, 
                                             currentDT=datetime.now())
 
+@bp.route('/chart')
+def chart():
+    
+    sensorData = {}
+    sensorData['Title'] = 'Test Title'
+    sensorData['StartFormatted'] = 'Start Date Formatted'
+    sensorData['EndFormatted'] = 'End Date Formatted'
+    
+    # Sensor Data
+    sensors = [
+            {'label': 'Temp',
+                'color': 'red',
+                'sensorId': 2,
+                'yAxisID': 'temp',
+            }
+    ]
+    sensorData['sensors'] = sensors
+
+    #TempTargetSensorId: 3
+    #GravitySensorId: 4
+    #GravTargetSensorId: 5
+    #TiltTempSensorId: 6
+
+    return render_template('sensors/chart.html', 
+                                sensorData=sensorData,
+                                currentDT=datetime.now())
+
 @bp.route('/setdata', methods=['POST']) 
 def SetSensorData():
     try:

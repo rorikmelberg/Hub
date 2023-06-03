@@ -1,1 +1,3 @@
+systemctl stop hub_local
 cp -r /home/rmelberg/Documents/GitHub/Hub/webapp/* /hub/webapp
+systemctl start hub_local
