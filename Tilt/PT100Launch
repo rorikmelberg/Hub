@@ -1,0 +1,4 @@
+#!/bin/bash
+# Script to load the application
+cd /tilt/TiltLog
+python3 PT100Log.py

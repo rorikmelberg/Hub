@@ -36,8 +36,9 @@ def chart():
     
     currentBrew = BrewDAL.getBrew(brewId)
 
-    return render_template('brew/chart.html', brew = currentBrew, 
-                                            currentDT=datetime.now())
+    return render_template('brew/chart.html', 
+                                brew=currentBrew, 
+                                currentDT=datetime.now())
 
 @bp.route('/editbrew', methods=['GET', 'POST'])
 def editbrew():

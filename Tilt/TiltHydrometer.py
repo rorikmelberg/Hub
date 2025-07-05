@@ -337,7 +337,6 @@ class TiltHydrometerManager:
             tiltHydrometer = TiltHydrometer(colour, self.averagingPeriod, self.medianWindow, self.debug)
             self.tiltHydrometers[colour] = tiltHydrometer
             
-        
         tiltHydrometer.setValues(temperature, gravity)
         
     #Retrieve function.
@@ -353,7 +352,7 @@ class TiltHydrometerManager:
         try:
             sock = bluez.hci_open_dev(self.dev_id)
 
-        except Exception, e:
+        except Exception as e:
             print "ERROR: Accessing bluetooth device: " + e.message
             sys.exit(1)
 
