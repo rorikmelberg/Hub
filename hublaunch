@@ -1,9 +1,14 @@
 #!/bin/bash
 # Script to load the application
-cd /hub/
-
+cd /hub
 export FLASK_APP=webapp
 export FLASK_ENV=development
-flask run --port 80 --host 0.0.0.0
 
- 
+python3 -m venv hub_env
+source hub_env/bin/activate
+
+pip3 install flask
+pip3 install flask-session
+pip3 install pytz
+pip3 install simplejson
+flask run --port 80 --host 0.0.0.0
