@@ -4,8 +4,8 @@ from flask import current_app, g
 from flask.cli import with_appcontext
 from datetime import datetime
 
-import webapp.db as wadb
-import webapp.DateHelpers as dh
+import db as wadb
+import DateHelpers as dh
 
 class TempLog:
     def __init__(self):

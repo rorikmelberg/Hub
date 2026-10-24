@@ -1,12 +1,12 @@
 import os
 import functools
-from webapp.db import get_db
-import webapp.DAL.CookDL as CookDL
-import webapp.DAL.TempDL as TempDL
+from db import get_db
+import DAL.CookDL as CookDL
+import DAL.TempDL as TempDL
 # only import if running on the PI
-# import webapp.DAL.HWTempDL as HWTempDL
+# import DAL.HWTempDL as HWTempDL
 
-import webapp.BO.CookBO as CookBO
+import BO.CookBO as CookBO
 
 from datetime import datetime
 from flask import jsonify

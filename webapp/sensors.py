@@ -1,9 +1,9 @@
 import os
 import functools
-from webapp.db import get_db
-import webapp.DAL.SensorDAL as SensorDAL
-import webapp.DAL.SensorDataDAL as SensorDataDAL
-import webapp.SMSession as SMSession
+from db import get_db
+import DAL.SensorDAL as SensorDAL
+import DAL.SensorDataDAL as SensorDataDAL
+import SMSession as SMSession
 import simplejson as json
 
 from flask import Blueprint

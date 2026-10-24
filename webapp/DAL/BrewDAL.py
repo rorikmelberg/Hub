@@ -3,8 +3,8 @@ import sqlite3
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
-import webapp.DateHelpers as dh
-import webapp.db as wadb
+import DateHelpers as dh
+import db as wadb
 from . import SensorDataDAL
 
 from datetime import datetime

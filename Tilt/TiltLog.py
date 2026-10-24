@@ -25,8 +25,17 @@ def SendSensorData(sensorId, value):
 	logging.info('Sensor: {0} Value: {1}'.format(sensorId, value))
 	
 	url = settings.get_url()
-	res = requests.post(url + '/sensors/setdata', json=valuesToSend, verify=False)
+	res = requests.post(url + '/sensors/setdata', json=valuesToSend)
 
+	try:
+		logging.info('TestSend %s', settings.get_testurl())
+		url = settings.get_testurl()
+		res = requests.post(url + '/sensors/setdata', json=valuesToSend)
+	except Exception as inst:
+		logging.error(type(inst))
+		logging.error(inst.args)
+		logging.error(inst.args)
+		
 logging.info('TiltLog Start')
 logging.info('URL: %s', settings.get_url())
 logging.info('Loop Timeout: %s', settings.get_looptimeout())
@@ -50,6 +59,8 @@ while True:
 
 		SendSensorData(GRAVITYSENSORBLACK, value.gravity)
 		SendSensorData(TEMPSENSORBLACK, value.temperature)
+		
+		logging.debug('Send Complete')
 
 	except Exception as inst:
 		logging.error(type(inst))

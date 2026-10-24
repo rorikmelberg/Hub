@@ -1,7 +1,7 @@
 import os
 import functools
-from webapp.db import get_db
-import webapp.SMSession as SMSession
+from db import get_db
+import SMSession as SMSession
 import logging
 
 from flask import Blueprint
@@ -37,7 +37,7 @@ def create_app(test_config=None):
     else:
         loglevel = logging.INFO
 
-    logging.basicConfig(filename='webapp.log', level=loglevel)
+    logging.basicConfig(filename='log', level=loglevel)
     
     # Log Settings
     logging.info('DEBUG: {}'.format(app.config['DEBUG']))
@@ -58,16 +58,16 @@ def create_app(test_config=None):
     def index():
         return render_template('index.html')
 
-    from . import smomo
+    import smomo
     app.register_blueprint(smomo.bp)
 
-    from . import brew
+    import brew
     app.register_blueprint(brew.bp)
 
-    from . import sensors
+    import sensors
     app.register_blueprint(sensors.bp)
 
-    from . import db
+    import db
     db.init_app(app)
     
     app.logger.info("Init Executed")

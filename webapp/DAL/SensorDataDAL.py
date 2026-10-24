@@ -6,8 +6,8 @@ import datetime
 from flask import current_app
 
 from . import SensorDAL
-import webapp.db as wadb
-import webapp.DateHelpers as dh
+import db as wadb
+import DateHelpers as dh
 
 dateFormatString = '%Y-%m-%d %H:%M:%S.%f'
 
@@ -55,6 +55,8 @@ def getValues(sensorId, startDate, endDate):
         
         db = wadb.get_db()
         values = []
+        
+        # Get data point to start the dataset
         firstVal = getLast(sensorId, startDate)
         current_app.logger.debug(firstVal.toString())
         firstVal.EventDate = startDate.strftime(dateFormatString)
@@ -66,7 +68,7 @@ def getValues(sensorId, startDate, endDate):
                                 AND EventDate >= ?
                                 AND EventDate < ?
                             ORDER BY EventDate'''
-        
+
         rtn = db.execute(sql, (sensorId, startDate, endDate)).fetchall()
 
         for x in rtn:

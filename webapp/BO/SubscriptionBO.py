@@ -1,9 +1,9 @@
 import os
 import functools
-from webapp.db import get_db
-import webapp.DAL.SubscriptionDL as SubscriptionDL
-import webapp.DAL.CookDL as CookDL
-import webapp.DAL.EmailDL as EmailDL
+from db import get_db
+import DAL.SubscriptionDL as SubscriptionDL
+import DAL.CookDL as CookDL
+import DAL.EmailDL as EmailDL
 from datetime import datetime
 
 from flask import jsonify

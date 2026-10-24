@@ -1,11 +1,16 @@
 import os
 import functools
-from webapp.db import get_db
-import webapp.DAL.BrewDAL as BrewDAL
-import webapp.DAL.SensorDataDAL as DataDAL
-import webapp.DAL.SubscriptionDL as SubscriptionDL
-import webapp.BO.BrewBO as BrewBO
-import webapp.SMSession as SMSession
+import sys
+from datetime import datetime
+from datetime import timedelta
+import requests
+
+from db import get_db
+import DAL.BrewDAL as BrewDAL
+import DAL.SensorDataDAL as DataDAL
+import DAL.SubscriptionDL as SubscriptionDL
+import BO.BrewBO as BrewBO
+import SMSession as SMSession
 import simplejson as json
 
 from flask import current_app
@@ -99,3 +104,29 @@ def GetBrewData():
     
     except Exception as ex:
         current_app.logger.exception(ex)
+
+
+@bp.route('/sendBrewFatherData', methods=['GET']) 
+def SendBrewFatherData():
+    try:
+        payload = BrewBO.GetBrew15MinAverage()
+
+        if len(payload) > 0:
+            url = 'http://log.brewfather.net/stream?id=6ZOedsVYxefJqx'
+            # url = 'http://test.com'
+            
+            try:
+                response = requests.post(url, json=payload, timeout=10)
+                
+                response.raise_for_status()
+                
+                response_data = response.json()
+                return f'Success! Response data: {response_data}'
+            except requests.exceptions.HTTPError as http_err:
+                return f'HTTP error occurred: {http_err}'
+            except requests.exceptions.RequestException as err:
+                return f'An error occurred: {err}'
+    except Exception as ex:
+        current_app.logger.exception(ex)
+        return f'Error: {ex}'
+    
