@@ -1,11 +1,11 @@
 import os
 import functools
-from webapp.db import get_db
-import webapp.DAL.CookDL as CookDL
-import webapp.DAL.TempDL as TempDL
-import webapp.DAL.SubscriptionDL as SubscriptionDL
-import webapp.BO.CookBO as CookBO
-import webapp.SMSession as SMSession
+from db import get_db
+import DAL.CookDL as CookDL
+import DAL.TempDL as TempDL
+import DAL.SubscriptionDL as SubscriptionDL
+import BO.CookBO as CookBO
+import SMSession as SMSession
 import simplejson as json
 
 from flask import Blueprint

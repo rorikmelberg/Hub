@@ -4,8 +4,8 @@ from flask import current_app, g
 from flask.cli import with_appcontext
 import datetime
 
-import webapp.db as wadb
-import webapp.DateHelpers as dh
+import db as wadb
+import DateHelpers as dh
 
 class Subscription:
     def __init__(self):

@@ -42,7 +42,7 @@ def main():
     tempFinalText = json.dumps(tempFinal)
     print(tempFinalText)
     url = settings.get_url()
-    res = requests.post(url + '/smomo/setdata', json=tempFinalText)
+    res = requests.post(url + '/smomo/setdata', json=tempFinalText, verify=False)
     if res.ok:
         print(res.json())
 

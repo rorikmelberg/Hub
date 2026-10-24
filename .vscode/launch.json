@@ -4,14 +4,24 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
         {
-            "name": "Python: Current File",
-            "type": "python",
+            "name": "Python Debugger: Flask",
+            "type": "debugpy",
             "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
-            "justMyCode": true,
-        }
+            "module": "flask",
+            "env": {
+                "FLASK_APP": "webapp\\app.py",
+                "FLASK_DEBUG": "1"
+            },
+            "args": [
+                "run",
+                "--host=0.0.0.0",
+                "--no-debugger",
+                "--no-reload",
+                "--port=5000"
+            ],
+            "jinja": true,
+            "autoStartBrowser": false
+        },
     ]
 }

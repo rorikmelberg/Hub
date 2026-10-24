@@ -7,21 +7,19 @@
 <script src="/static/Chart.bundle.min.js"></script>
 <script src="/static/utils.js"></script>
 
-<span id='BrewId' style='display: none;'>{{ brew.BrewId }}</span>
-
 <div class="container">
   <div class="row">
     <div class='col'>
-      Title: <span id='Title'> {{ brew.Title }}</span><br />
-      Start: {{ brew.StartFormatted }}<br />
-      End: {{ brew.EndFormatted }}<br />
+      Title: <span id='Title'> {{ sensorData.Title }}</span><br />
+      Start: {{ sensorData.StartFormatted }}<br />
+      End: {{ sensorData.EndFormatted }}<br />
       Duration: <span id='Duration'></span><br />
     </div>
     <div class='col'>
-      Temp: <span id='currentTemp'>{{ brew.CurrentTemp }}</span>
+      Temp: <span id='currentTemp'></span>
     </div>
     <div class='col'>
-      Gravity: <span id='currentGravity'>{{ brew.CurrentGravity }}</span>
+      Gravity: <span id='currentGravity'></span>
       <input id='updateButton' type='button' onclick="getData(true);" value='Update'></input>
       <input id='autoUpdate' type='checkbox' onclick="AutoUpdate();">Auto</input><br/>
       <span id='LastDataStatus' class="rounded p-1" style="background-color: red;">Bad</span>
@@ -31,6 +29,33 @@
 
 <div class="container">
   <canvas id="chart"></canvas>
+</div>
+
+<div class="container">
+  <table>
+    <tr>
+      <th>
+        label
+      </th>
+      <th>
+        color
+      </th>
+      <th>
+        sensorId
+      </th>
+      <th>
+        yAxisID
+      </th>
+    </tr>
+  {% for sensor in sensorData.sensors %}
+        <tr>
+          <td>{{ sensor.label}}</td>
+          <td>{{ sensor.color}}</td>
+          <td>{{ sensor.sensorId}}</td>
+          <td>{{ sensor.yAxisID}}</td>
+        </tr>
+  {% endfor %}
+  </table>
 </div>
 
 <script>
@@ -116,7 +141,6 @@
   $SCRIPT_ROOT={{ request.script_root|tojson|safe }}; 
   var lastUpdate = null;
   var interval = 0;  //Use to store and clear the set interval
-
 
   $(document).ready(function() 
     { 
